@@ -32,8 +32,13 @@ public abstract class Entitys {
 	}
 
 	public void move() {
-		this.x = Math.max(Math.min(this.vect.getX() + this.x, Game.SIZE - this.width), 0);
-		this.y = Math.max(Math.min(this.vect.getY() + this.y, Game.SIZE - this.height), 0);
+		if (this instanceof Projectile) {
+			this.x += this.vect.getX();
+			this.y += this.vect.getY();
+		} else {
+			this.x = Math.max(Math.min(this.vect.getX() + this.x, Game.SIZE - this.width - 1), 0);
+			this.y = Math.max(Math.min(this.vect.getY() + this.y, Game.SIZE - this.height - 1), 0);			
+		}
 	}
 
 	public abstract void paint(Graphics2D g);

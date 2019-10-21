@@ -23,8 +23,9 @@ public abstract class Projectile extends Entitys {
 		super(x, y, width, height, vect);
 	}
 	
+	@Override
 	public void move() {
-		this.getVector().multiply(1.0025);
+		this.getVector().multiply(1.025);
 		super.move();
 	}
 	

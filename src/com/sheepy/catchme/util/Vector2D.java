@@ -14,6 +14,12 @@ public class Vector2D {
 		this.y = y;
 	}
 	
+	public Vector2D add(double x, double y) {
+		this.x += x;
+		this.y += y;
+		return this;
+	}
+	
 	public Vector2D add(Vector2D vector) {
 		this.x += vector.getX();
 		this.y += vector.getY();
@@ -23,18 +29,23 @@ public class Vector2D {
 	public Vector2D multiply(double m) {
 		this.x *= m;
 		this.y *= m;
-		return this;
+		return this.clone();
 	}
 	
-	public Vector2D multiply(Vector2D vector) {
-		return this;
-	}
+//	public Vector2D crossProduct(Vector vect) {
+//		this.vect;
+//		return this;
+//	}
+	
+//	public Vector2D dotProduct(Vector vect) {
+//		return this
+//	}
 	
 	public Vector2D getNormalize() {
 		double magnitude = this.getMagnitude();
-		this.x = this.x / magnitude;
-		this.y = this.y / magnitude;
-		return this;
+		double dx = this.x / magnitude;
+		double dy = this.y / magnitude;
+		return new Vector2D(dx, dy);
 	}
 	
 	public double getMagnitude() {
@@ -56,6 +67,10 @@ public class Vector2D {
 
 	public void setY(double y) {
 		this.y = y;
+	}
+	
+	public Vector2D clone() {
+		return new Vector2D(this.x, this.y);
 	}
 	
 	@Override

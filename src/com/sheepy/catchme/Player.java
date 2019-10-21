@@ -1,0 +1,41 @@
+package com.sheepy.catchme;
+
+import java.awt.Graphics2D;
+
+import com.sheepy.catchme.util.Vector2D;
+
+public class Player extends Entitys {
+	
+	private String name;
+	
+	public Player() {
+		this(0, 0, 10.0, 10.0, "tester");
+	}
+	
+	public Player(int x, int y) {
+		this(x, y, 10.0, 10.0, "tester");
+	}
+	
+	public Player(String name) {
+		this(0, 0, 10.0, 10.0, name);
+	}
+	
+	public Player(int x, int y, double width, double height, String name) {
+		super(x, y, width, height, new Vector2D(0, 0));
+		this.name = name;
+	}
+	
+	@Override
+	public void paint(Graphics2D g) {
+		g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+}

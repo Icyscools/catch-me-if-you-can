@@ -1,8 +1,12 @@
-package com.sheepy.catchme;
+package com.sheepy.catchme.entitys.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
+import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
 public class Player extends Entitys {
@@ -30,6 +34,11 @@ public class Player extends Entitys {
 	public void paint(Graphics2D g) {
 		g.setColor(new Color(128, 255, 128)); // int r, int g, int b
 		g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
+	}
+
+	@Override
+	public Shape getHitbox() {
+		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 
 	public String getName() {

@@ -11,7 +11,7 @@ public class Game {
 	public static int SIZE = 500;
 	private static JFrame frame;
 	private static GameBoard game;
-	private static double timeTick;
+//	private static double timeTick;
 	
 	public static void main(String[] args) throws InterruptedException {
 		frame = new JFrame("Game");
@@ -26,8 +26,8 @@ public class Game {
 		while (true) {
 			if (game.getGameState() == GameState.RUNNING) {
 				game.update();
+				Thread.sleep(25);
 			}
-			Thread.sleep(25);
 		}
 	}
 	

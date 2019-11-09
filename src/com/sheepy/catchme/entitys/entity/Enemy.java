@@ -1,8 +1,11 @@
-package com.sheepy.catchme;
+package com.sheepy.catchme.entitys.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
+import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
 public class Enemy extends Entitys {
@@ -38,6 +41,11 @@ public class Enemy extends Entitys {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public Shape getHitbox() {
+		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 	}
 	
 }

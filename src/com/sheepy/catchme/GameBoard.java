@@ -2,16 +2,18 @@ package com.sheepy.catchme;
 
 import javax.swing.*;
 
+import com.sheepy.catchme.entitys.entity.Enemy;
+import com.sheepy.catchme.entitys.entity.Player;
+import com.sheepy.catchme.entitys.Projectile;
+import com.sheepy.catchme.entitys.projectile.Ball;
 import com.sheepy.catchme.enums.GameState;
 import com.sheepy.catchme.util.Vector2D;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
 import java.util.*;
 
 public class GameBoard extends JPanel implements KeyListener, MouseListener {
@@ -29,14 +31,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		this.enemys = new ArrayList<Enemy>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.state = GameState.RUNNING;
-		
+
 		this.players.add(new Player());
 		this.enemys.add(new Enemy(50, 50));
 
-		Ball ball = new Ball();
-		ball.setVector(new Vector2D(1.0, 1.0));
-		this.projectiles.add(ball);
-		
 		this.setPreferredSize(new Dimension(Game.SIZE, Game.SIZE));
 		this.addKeyListener(this);
 		this.addMouseListener(this);
@@ -83,27 +81,37 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		for (Player player : this.players) {
+
+		// Render Entity
+		for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
+			Player player = iterPlayer.next();
 			player.paint(g2d);
 		}
-		
-		for (Enemy enemy : this.enemys) {
+
+		for (Iterator<Enemy> iterEnemy = this.enemys.iterator(); iterEnemy.hasNext();) {
+			Enemy enemy = iterEnemy.next();
+			if (!this.projectiles.isEmpty()) {
+				for (Projectile proj : this.projectiles) {
+					if (enemy.checkCollision(proj.getHitbox())) {
+						iterEnemy.remove();
+					}
+				}
+			}
 			enemy.paint(g2d);
 		}
-		
-		for (Projectile proj : this.projectiles) {
+
+		for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
+			Projectile proj = iterProj.next();
 			if (proj instanceof Projectile) {
-				if (proj.getX() < 0 || proj.getX() > Game.SIZE || proj.getY() < 0 || proj.getY() > Game.SIZE) {
+				if (!proj.isVisible()) {
 					try {
-						this.projectiles.remove(proj);
+						iterProj.remove();
 						continue;
 					} catch (Exception e) {
 						System.out.println(e);
 					}
 				}
 			}
-			
 			proj.move();
 			proj.paint(g2d);
 		}
@@ -130,44 +138,33 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-//		System.out.println(e.getXOnScreen() + " " + e.getYOnScreen());
-		Player player = this.players.get(0);
-		Vector2D v = player.getVector().clone();
-		v.add((double)e.getXOnScreen(), (double)e.getYOnScreen());
-		Vector2D vect = v.getNormalize();
-
-		vect.setX(e.getXOnScreen() > player.getX() ? vect.getX() * 1 : vect.getX() * -1);
-		vect.setY(e.getYOnScreen() > player.getY() ? vect.getY() * 1 : vect.getY() * -1);
-		
-		System.out.println(vect);
-		
-		Ball ball = new Ball(player.getX(), player.getY(), 10.0, 10.0, player, vect);
-		this.projectiles.add(ball);
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		Player player = this.players.get(0);
+		double projSize = 8.0;
+		double centerX = player.getX() + player.getWidth() / 2;
+		double centerY = player.getY() + player.getHeight() / 2;
+
+		Vector2D vect = new Vector2D();
+		vect.add((double) e.getX() - centerX, (double) e.getY() - centerY);
+		System.out.println(vect);
+		vect = vect.getNormalize();
+
+		Ball ball = new Ball(centerX, centerY, projSize, projSize, player, vect);
+		this.projectiles.add(ball);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -1,7 +1,7 @@
-package com.sheepy.catchme;
+package com.sheepy.catchme.entitys;
 
-import java.awt.Frame;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 
 import com.sheepy.catchme.util.Vector2D;
 
@@ -25,10 +25,12 @@ public abstract class Projectile extends Entitys {
 	
 	@Override
 	public void move() {
-		this.getVector().multiply(1.025);
+		this.getVector().multiply(1.075);
+		this.getVector().getNormalize();
 		super.move();
 	}
 	
 	public abstract void paint(Graphics2D g);
+	public abstract Shape getHitbox();
 
 }

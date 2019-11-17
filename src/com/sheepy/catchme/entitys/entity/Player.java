@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import com.sheepy.catchme.Camera;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 

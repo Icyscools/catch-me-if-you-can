@@ -21,12 +21,18 @@ public class Ball extends Projectile {
 
 	public Ball(Player player) {
 		this(player.getX(), player.getY(), 10.0, 10.0, player, player.getVector());
-		this.owner = player;
 	}
 
 	public Ball(Player player, Vector2D v) {
 		this(player.getX(), player.getY(), 10.0, 10.0, player, v);
-		this.owner = player;
+	}
+	
+	public Ball(double size, Player player, Vector2D v) {
+		this(player.getX(), player.getY(), size, size, player, v);
+	}
+	
+	public Ball(double x, double y, double size, Player player, Vector2D v) {
+		this(x, y, size, size, player, v);
 	}
 
 	public Ball(double x, double y, double width, double height, Player player, Vector2D vector) {
@@ -39,7 +45,7 @@ public class Ball extends Projectile {
 	public void paint(Graphics2D g) {
 		this.hitbox.setFrame(this.getX() - this.getWidth() / 2, this.getY() - this.getHeight() / 2, this.getWidth(),
 				this.getHeight());
-		g.setColor(new Color(30, 30, 30));
+		g.setColor(new Color(187, 128, 132));
 		g.fill(this.hitbox);
 	}
 

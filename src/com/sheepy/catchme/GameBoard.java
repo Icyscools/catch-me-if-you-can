@@ -25,8 +25,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 	private static GameBoard game;
 	private static JFrame frame;
 	private static double timeTick;
-	public static int WINDOW_WIDTH = 640;
-	public static int WINDOW_HEIGHT = 640;
+	public static int WINDOW_WIDTH = 1366;
+	public static int WINDOW_HEIGHT = 768;
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;
 	private final Set<Integer> pressed = new HashSet<Integer>();

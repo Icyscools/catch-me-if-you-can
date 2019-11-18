@@ -3,6 +3,7 @@ package com.sheepy.catchme.entitys;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 
+import com.sheepy.catchme.Game;
 import com.sheepy.catchme.GameBoard;
 import com.sheepy.catchme.util.Vector2D;
 
@@ -39,8 +40,8 @@ public abstract class Entitys {
 			this.x += this.vect.getX();
 			this.y += this.vect.getY();
 		} else {
-			this.x = Math.max(Math.min(this.vect.getX() + this.x, GameBoard.GAME_WIDTH - this.width), 0);
-			this.y = Math.max(Math.min(this.vect.getY() + this.y, GameBoard.GAME_HEIGHT - this.height), 0);
+			this.x = Math.max(Math.min(this.vect.getX() + this.x, Game.GAME_WIDTH - this.width), 0);
+			this.y = Math.max(Math.min(this.vect.getY() + this.y, Game.GAME_HEIGHT - this.height), 0);
 		}
 	}
 
@@ -89,7 +90,7 @@ public abstract class Entitys {
 	}
 
 	public boolean isInGameboard() {
-		return !(this.getX() < 0 || this.getX() > GameBoard.GAME_WIDTH || this.getY() < 0 || this.getY() > GameBoard.GAME_HEIGHT);
+		return !(this.getX() < 0 || this.getX() > Game.GAME_WIDTH || this.getY() < 0 || this.getY() > Game.GAME_HEIGHT);
 	}
 
 	public boolean checkCollision(Shape bound) {

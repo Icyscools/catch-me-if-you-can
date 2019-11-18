@@ -12,7 +12,6 @@ public class Camera {
 		this.player = player;
 	}
 	
-	public void paint(Graphics2D g) {
-	}
+	public void paint(Graphics2D g) {}
 
 }

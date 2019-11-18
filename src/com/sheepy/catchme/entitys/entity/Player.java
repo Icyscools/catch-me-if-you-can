@@ -3,6 +3,7 @@ package com.sheepy.catchme.entitys.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
@@ -35,6 +36,7 @@ public class Player extends Entitys {
 	public void paint(Graphics2D g) {
 		g.setColor(new Color(128, 255, 128)); // int r, int g, int b
 		g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
+		g.drawString(this.name, (int)this.getX(), (int)this.getY() - 5);
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import com.sheepy.catchme.util.Colors;
 public class TileMap {
 
 	private int mapTile[][];
-	private static int tileSize = 32;
+	private static int tileSize = 64;
 	private int width, height;
 
 	public TileMap(int width, int height) {
@@ -53,7 +53,8 @@ public class TileMap {
 		}
 
 		cloneTile = this.mapTile.clone();
-		debugMap(cloneTile);
+		//debugMap(cloneTile);
+		
 		// Concat noise
 		for (int row = 8; row < height - 8; row++) {
 			for (int col = 8; col < width - 8; col++) {
@@ -90,7 +91,7 @@ public class TileMap {
 
 		int rowLength = this.mapTile.length;
 		int colLength = this.mapTile[0].length;
-		debugMap(this.mapTile);
+		//debugMap(this.mapTile);
 
 		int[][] mask = this.observeGo(rowLength / 2, colLength / 2, this.mapTile.clone());
 		for (int row = 0; row < height; row++) {
@@ -171,7 +172,7 @@ public class TileMap {
 					int tile = this.mapTile[row][col];
 					switch (tile) {
 					case 1:
-						g.setColor(Colors.green);
+						g.setColor(Colors.grass);
 						break;
 					case 2:
 						g.setColor(new Color(60, 0, 0));

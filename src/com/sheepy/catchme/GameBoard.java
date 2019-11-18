@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.sheepy.catchme.entitys.entity.Enemy;
 import com.sheepy.catchme.entitys.entity.Player;
+import com.sheepy.catchme.entitys.entity.Item;
 import com.sheepy.catchme.entitys.Projectile;
 import com.sheepy.catchme.entitys.projectile.Ball;
 import com.sheepy.catchme.enums.GameState;
@@ -23,22 +24,49 @@ import java.util.*;
 public class GameBoard extends JPanel implements KeyListener, MouseListener {
 
 	private static GameBoard game;
+	private static JFrame frame;
 	private static double timeTick;
+	public static int WINDOW_WIDTH = 1366;
+	public static int WINDOW_HEIGHT = 768;
+	public static int GAME_WIDTH;
+	public static int GAME_HEIGHT;
 	private final Set<Integer> pressed = new HashSet<Integer>();
 	private final TileMap tileMap;
 	private List<Player> players;
 	private List<Enemy> enemys;
+        private List<Item> item;
 	private List<Projectile> projectiles;
 	private GameState state;
+
+
+	public static void main(String[] args) throws InterruptedException {
+		frame = new JFrame("Game");
+		game = new GameBoard();
+		frame.add(game, BorderLayout.CENTER);
+		frame.pack();
+		frame.setTitle("Catch me if you can");
+		frame.setVisible(true);
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		while (true) {
+			if (game.getGameState() == GameState.RUNNING) {
+				game.update();
+				timeTick++;
+				Thread.sleep(25);
+			}
+		}
+	}
 
 	public GameBoard() throws InterruptedException {
 		this.players = new ArrayList<Player>();
 		this.enemys = new ArrayList<Enemy>();
 		this.projectiles = new ArrayList<Projectile>();
+                this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
 		this.tileMap = new TileMap(32, 32);
-		Game.GAME_WIDTH = this.tileMap.getWidth() * TileMap.getTileSize();
-		Game.GAME_HEIGHT = this.tileMap.getHeight() * TileMap.getTileSize();
+		GAME_WIDTH = this.tileMap.getWidth() * TileMap.getTileSize();
+		GAME_HEIGHT = this.tileMap.getHeight() * TileMap.getTileSize();
 
 		this.players.add(new Player());
 		Player p = this.players.get(0);
@@ -46,8 +74,9 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		p.setX(TileMap.getTileSize() * pos[0]);
 		p.setY(TileMap.getTileSize() * pos[1]);
 		this.enemys.add(new Enemy(50, 50));
+                this.item.add(new Item(500, 500));
 
-		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
+		this.setPreferredSize(new Dimension(GameBoard.WINDOW_WIDTH, GameBoard.WINDOW_HEIGHT));
 		this.setBackground(Colors.blue);
 		this.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		this.addKeyListener(this);
@@ -103,32 +132,15 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		// Translate to player
-		g2d.translate(-this.players.get(0).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(0).getY() + Game.WINDOW_HEIGHT / 2);
+		g2d.translate(-this.players.get(0).getX() + WINDOW_WIDTH / 2, -this.players.get(0).getY() + WINDOW_HEIGHT / 2);
 
 		// Clear screen
 		g.setColor(new Color(0, 0, 0)); // int r, int g, int b
-		g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+		g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
 		// Render Map
 		this.tileMap.paint(g2d);
 
-		// Render projectile
-		for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
-			Projectile proj = iterProj.next();
-			if (proj instanceof Projectile) {
-				if (!proj.isInGameboard()) {
-					try {
-						iterProj.remove();
-						continue;
-					} catch (Exception e) {
-						System.out.println(e);
-					}
-				}
-			}
-			proj.move();
-			proj.paint(g2d);
-		}
-		
 		// Render Entity
 		for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
 			Player player = iterPlayer.next();
@@ -145,6 +157,32 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 				}
 			}
 			enemy.paint(g2d);
+		}
+                
+                for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
+			Item item = iterItem.next();
+                        for (Player player : this.players) {
+			    if (item.checkCollision(player.getHitbox())) {
+				iterItem.remove();
+                            }
+			}
+			item.paint(g2d);
+		}
+
+		for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
+			Projectile proj = iterProj.next();
+			if (proj instanceof Projectile) {
+				if (!proj.isInGameboard()) {
+					try {
+						iterProj.remove();
+						continue;
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				}
+			}
+			proj.move();
+			proj.paint(g2d);
 		}
 	}
 
@@ -178,8 +216,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			Player player = this.players.get(0);
 			double projSize = 20.0;
-			double centerX = Game.WINDOW_WIDTH / 2;
-			double centerY = Game.WINDOW_HEIGHT / 2;
+			double centerX = WINDOW_WIDTH / 2;
+			double centerY = WINDOW_HEIGHT / 2;
 
 			Vector2D vect = new Vector2D();
 			System.out.println("x: " + e.getXOnScreen() + " " + e.getX());

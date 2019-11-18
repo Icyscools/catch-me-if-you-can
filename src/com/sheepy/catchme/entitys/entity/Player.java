@@ -11,7 +11,7 @@ import com.sheepy.catchme.Camera;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
-public class Player extends Entitys {
+public abstract class Player extends Entitys {
 	
 	private String name;
 	
@@ -33,11 +33,7 @@ public class Player extends Entitys {
 	}
 	
 	@Override
-	public void paint(Graphics2D g) {
-		g.setColor(new Color(128, 255, 128)); // int r, int g, int b
-		g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
-		g.drawString(this.name, (int)this.getX(), (int)this.getY() - 5);
-	}
+	public abstract void paint(Graphics2D g);
 
 	@Override
 	public Shape getHitbox() {

@@ -149,8 +149,8 @@ public class TileMap {
 	}
 	
 	public int[] getRandomGroundTile() {
-		int row = (int) Math.ceil(1 + Math.random() * (this.width - 2));
-		int col = (int) Math.ceil(1 + Math.random() * (this.height - 2));
+		int row = (int) Math.floor(1 + Math.random() * (this.width - 2));
+		int col = (int) Math.floor(1 + Math.random() * (this.height - 2));
 		if (this.mapTile[row][col] == 0) {
 			return getRandomGroundTile();
 		} else {

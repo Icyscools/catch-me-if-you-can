@@ -10,8 +10,6 @@ public class Game {
 	
 	public static int WINDOW_WIDTH = 640;
 	public static int WINDOW_HEIGHT = 640;
-	public static int GAME_WIDTH;
-	public static int GAME_HEIGHT;
 	public static JFrame frame;
 	
 	public static void main(String[] args) throws InterruptedException {

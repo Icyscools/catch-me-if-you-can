@@ -94,12 +94,6 @@ public class TileMap {
 		//debugMap(this.mapTile);
 
 		int[][] mask = this.observeGo(rowLength / 2, colLength / 2, this.mapTile.clone());
-		for (int row = 0; row < height; row++) {
-			for (int col = 0; col < width; col++) {
-				System.out.print(mask[row][col]);
-			}
-			System.out.println();
-		}
 		this.mapTile = mask;
 	}
 
@@ -156,6 +150,24 @@ public class TileMap {
 		} else {
 			return new int[] {row, col};
 		}
+	}
+	
+	public int[] getRandomGroundPosition() {
+		int pos[] = getRandomGroundTile();
+		int y = pos[0] * TileMap.getTileSize();
+		int x = pos[1] * TileMap.getTileSize();
+		return new int[] { x, y };
+		
+	}
+	
+	public int getTile(double x, double y) {
+		return getTile((int) x, (int) y);
+	}
+	
+	public int getTile(int x, int y) {
+		int row = y / TileMap.tileSize;
+		int col = x / TileMap.tileSize;
+		return this.mapTile[row][col];
 	}
 
 	public static int getTileSize() {

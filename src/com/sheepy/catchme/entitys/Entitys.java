@@ -40,8 +40,16 @@ public abstract class Entitys {
 			this.x += this.vect.getX();
 			this.y += this.vect.getY();
 		} else {
-			this.x = Math.max(Math.min(this.vect.getX() + this.x, GameBoard.GAME_WIDTH - this.width), 0);
-			this.y = Math.max(Math.min(this.vect.getY() + this.y, GameBoard.GAME_HEIGHT - this.height), 0);
+			double nx = Math.max(Math.min(this.vect.getX() + this.x, GameBoard.GAME_WIDTH - this.width), 0);
+			double ny = Math.max(Math.min(this.vect.getY() + this.y, GameBoard.GAME_HEIGHT - this.height), 0);
+
+			if (GameBoard.tileMap.getTile(nx, ny) > 0 &&
+				GameBoard.tileMap.getTile(nx + this.width, ny) > 0 &&
+				GameBoard.tileMap.getTile(nx, ny + this.height) > 0 &&
+				GameBoard.tileMap.getTile(nx + this.width, ny + this.height) > 0) {
+				this.x = nx;
+				this.y = ny;
+			}
 		}
 	}
 
@@ -64,7 +72,7 @@ public abstract class Entitys {
 	public void setY(double y) {
 		this.y = y;
 	}
-	
+
 	public void setPosition(double x, double y) {
 		this.x = x;
 		this.y = y;

@@ -1,8 +1,6 @@
 package com.sheepy.catchme;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import com.sheepy.catchme.entitys.entity.Player;
 import com.sheepy.catchme.entitys.entity.Sheep;
 import com.sheepy.catchme.entitys.entity.Werewolf;
@@ -13,7 +11,6 @@ import com.sheepy.catchme.enums.GameState;
 import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,13 +21,11 @@ import java.util.*;
 
 public class GameBoard extends JPanel implements KeyListener, MouseListener {
 
-	private static GameBoard game;
-	private static JFrame frame;
 	private static double timeTick;
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;
+	public static TileMap tileMap;
 	private final Set<Integer> pressed = new HashSet<Integer>();
-	private final TileMap tileMap;
 	private List<Player> players;
 	private List<Item> item;
 	private List<Projectile> projectiles;
@@ -42,19 +37,19 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
-		this.tileMap = new TileMap(32, 32);
-		GAME_WIDTH = this.tileMap.getWidth() * TileMap.getTileSize();
-		GAME_HEIGHT = this.tileMap.getHeight() * TileMap.getTileSize();
-		
+		GameBoard.tileMap = new TileMap(64, 64);
+		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
+		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
+
 		Werewolf _w = new Werewolf();
-		int[] pos1 = this.tileMap.getRandomGroundTile();
-		_w.setX(TileMap.getTileSize() * pos1[0]);
-		_w.setY(TileMap.getTileSize() * pos1[1]);
+		int[] pos1 = GameBoard.tileMap.getRandomGroundPosition();
+		_w.setX(pos1[0]);
+		_w.setY(pos1[1]);
 		Sheep _s = new Sheep();
-		int[] pos2 = this.tileMap.getRandomGroundTile();
-		_s.setX(TileMap.getTileSize() * pos2[0]);
-		_s.setY(TileMap.getTileSize() * pos2[1]);
-		
+		int[] pos2 = GameBoard.tileMap.getRandomGroundPosition();
+		_s.setX(pos2[0]);
+		_s.setY(pos2[1]);
+
 		this.players.add(_w);
 		this.players.add(_s);
 		this.item.add(new Item(500, 500));
@@ -70,40 +65,25 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 	public void update() {
 		Player p = this.players.get(0);
 		Vector2D v = p.getVector();
-		if (this.pressed.size() > 0) {
-			double dx = 0, dy = 0;
-			if (this.pressed.contains(65)) {
-				dx -= 1;
-			}
-			if (this.pressed.contains(68)) {
-				dx += 1;
-			}
-			if (this.pressed.contains(87)) {
-				dy -= 1;
-			}
-			if (this.pressed.contains(83)) {
-				dy += 1;
-			}
-			if (!this.pressed.isEmpty()) {
-				// this.players.get(0).setX(this.players.get(0).getX() + dx);
-				// this.players.get(0).setY(this.players.get(0).getY() + dy);
-				v.add(dx, dy);
-			} else if (this.pressed.size() <= 1 && this.pressed.contains(16)){
-				if (v.getMagnitude() < 0.5) {
-					v.setX(0);
-					v.setY(0);
-				} else {
-					v.multiply(0.3);
-				}
-			}
-			// this.players.get(0).setVector(v);
-			// System.out.println(this.players.get(0).getX() + " " + this.players.get(0).getY());
-		} else {
-			v.multiply(0.5);
-			if (v.getX() < 0.1) v.setX(0.0);
-			if (v.getY() < 0.1) v.setY(0.0);
-			this.players.get(0).setVector(v);
+		double dx = 0, dy = 0;
+		if (this.pressed.contains(65)) {
+			dx -= 5;
 		}
+		if (this.pressed.contains(68)) {
+			dx += 5;
+		}
+		if (this.pressed.contains(87)) {
+			dy -= 5;
+		}
+		if (this.pressed.contains(83)) {
+			dy += 5;
+		}
+		
+		v.setX(dx);
+		v.setY(dy);
+		timeTick += Game.TICK;
+		// System.out.println(this.tileMap.getTile(this.players.get(0).getX(), this.players.get(0).getY()));
+		
 		this.players.get(0).move();
 		this.repaint();
 	}
@@ -114,7 +94,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// Translate to player
+		// Translate screen to player
 		g2d.translate(-this.players.get(0).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(0).getY() + Game.WINDOW_HEIGHT / 2);
 
 		// Clear screen
@@ -122,19 +102,15 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
 		// Render Map
-		this.tileMap.paint(g2d);
+		GameBoard.tileMap.paint(g2d);
 
 		// Render Entity
 		for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
 			Projectile proj = iterProj.next();
 			if (proj instanceof Projectile) {
 				if (!proj.isInGameboard()) {
-					try {
-						iterProj.remove();
-						continue;
-					} catch (Exception e) {
-						System.out.println(e);
-					}
+					iterProj.remove();
+					continue;
 				}
 				for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
 					Player player = iterPlayer.next();
@@ -150,7 +126,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 			proj.move();
 			proj.paint(g2d);
 		}
-		
+
 		for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
 			Item item = iterItem.next();
 			for (Player player : this.players) {
@@ -160,7 +136,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 			}
 			item.paint(g2d);
 		}
-		
+
 		for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
 			Player player = iterPlayer.next();
 			player.paint(g2d);
@@ -176,15 +152,18 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// System.out.println(e.getKeyCode());
-		if (e.getKeyCode() == 16 && !pressed.contains(16)) {
-			this.players.get(0).getVector().multiply(2);
-		}
+		//		if (e.getKeyCode() == 16 && !pressed.contains(16)) {
+		//			this.players.get(0).getVector().multiply(2);
+		//		}
+
 		pressed.add(e.getKeyCode());
+		// System.out.println(e.getKeyCode() + this.pressed.toString());
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		pressed.remove(e.getKeyCode());
+		// System.out.println(e.getKeyCode() + this.pressed.toString());
 	}
 
 	@Override

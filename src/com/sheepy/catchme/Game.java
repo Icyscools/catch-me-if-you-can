@@ -1,15 +1,19 @@
 package com.sheepy.catchme;
 
 import java.awt.BorderLayout;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 import javax.swing.JFrame;
 
 import com.sheepy.catchme.enums.GameState;
 
 public class Game {
-	
+
 	public static int WINDOW_WIDTH = 640;
 	public static int WINDOW_HEIGHT = 640;
+	public static int TICK = 25;
 	public static JFrame frame;
 	
 	public static void main(String[] args) throws InterruptedException {
@@ -25,7 +29,7 @@ public class Game {
 		while (true) {
 			if (game.getGameState() == GameState.RUNNING) {
 				game.update();
-				Thread.sleep(25);
+				Thread.sleep(TICK);
 			}
 		}
 	}

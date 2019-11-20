@@ -11,8 +11,7 @@ import com.sheepy.catchme.Camera;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
-public abstract class Player extends Entitys {
-	
+public abstract class Player extends Entitys {	
 	private String name;
 	
 	public Player() {

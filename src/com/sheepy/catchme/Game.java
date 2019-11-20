@@ -15,7 +15,7 @@ public class Game {
 	public static int WINDOW_HEIGHT = 640;
 	public static int TICK = 25;
 	public static JFrame frame;
-	
+        
 	public static void main(String[] args) throws InterruptedException {
 		frame = new JFrame("Game");
 		GameBoard game = new GameBoard();

@@ -22,6 +22,7 @@ import java.util.*;
 public class GameBoard extends JPanel implements KeyListener, MouseListener {
 
 	private static double timeTick;
+	private static double ballDelay;
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;
 	public static TileMap tileMap;
@@ -174,7 +175,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 	public void mousePressed(MouseEvent e) {
 		// is left click ?
 		// MouseEvent.BUTTON1 = left click
-		if (e.getButton() == MouseEvent.BUTTON1) {
+		if (e.getButton() == MouseEvent.BUTTON1 && (timeTick - ballDelay >= 2000 || ballDelay == 0.0)) {
 			Player player = this.players.get(0);
 			double projSize = 20.0;
 			double centerX = Game.WINDOW_WIDTH / 2;
@@ -191,6 +192,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 			double playerCenterY = player.getY() + player.getHeight() / 2;
 			Ball ball = new Ball(playerCenterX, playerCenterY, projSize, player, vect);
 			this.projectiles.add(ball);
+			ballDelay = timeTick;
 		}
 	}
 

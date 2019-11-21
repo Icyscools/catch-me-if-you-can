@@ -16,7 +16,7 @@ public abstract class Player extends Entitys {
 	
 	private String name;
 	protected SpriteSheet sheet;
-	private String status;
+	private String status="None";
 	
 	public Player() {
 		this(0, 0, 25.0, 25.0, "tester");

@@ -6,10 +6,13 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
 import com.sheepy.catchme.entitys.entity.Player;
+import com.sheepy.catchme.events.BallHitEvent;
+import com.sheepy.catchme.events.BallHitListener;
+import com.sheepy.catchme.GameBoard;
 import com.sheepy.catchme.entitys.Projectile;
 import com.sheepy.catchme.util.Vector2D;
 
-public class Ball extends Projectile {
+public class Ball extends Projectile implements BallHitListener {
 
 	private Player owner;
 	private Ellipse2D hitbox;
@@ -39,6 +42,7 @@ public class Ball extends Projectile {
 		super(x, y, width, height, vector);
 		this.owner = player;
 		this.hitbox = new Ellipse2D.Double(x, y, width, height);
+		GameBoard.eventObserver.addBallHitListener(this);
 	}
 
 	@Override
@@ -56,6 +60,11 @@ public class Ball extends Projectile {
 	@Override
 	public Shape getHitbox() {
 		return this.hitbox;
+	}
+
+	@Override
+	public void onBallHit(BallHitEvent event) {
+		System.out.println(event.toString());
 	}
 
 }

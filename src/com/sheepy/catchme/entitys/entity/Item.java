@@ -6,7 +6,6 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import com.sheepy.catchme.entitys.Entitys;
-import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
 
 public class Item extends Entitys {

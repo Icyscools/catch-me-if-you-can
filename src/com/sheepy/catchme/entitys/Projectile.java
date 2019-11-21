@@ -6,7 +6,9 @@ import java.awt.Shape;
 import com.sheepy.catchme.util.Vector2D;
 
 public abstract class Projectile extends Entitys {
+	
 	private double velocity;
+	
 	public Projectile() {
 		this(0.0, 0.0, 5.0, 5.0, new Vector2D());
 	}
@@ -28,7 +30,6 @@ public abstract class Projectile extends Entitys {
 	public void move() {
 		velocity -= 0.03225;
 		this.getVector().multiply(velocity);
-		this.getVector().getNormalize();
 		super.move();
 	}
 	

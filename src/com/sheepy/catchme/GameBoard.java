@@ -1,6 +1,5 @@
 package com.sheepy.catchme;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import com.sheepy.catchme.entitys.entity.Player;
 import com.sheepy.catchme.entitys.entity.Sheep;
@@ -9,6 +8,10 @@ import com.sheepy.catchme.entitys.entity.Item;
 import com.sheepy.catchme.entitys.Projectile;
 import com.sheepy.catchme.entitys.projectile.Ball;
 import com.sheepy.catchme.enums.GameState;
+import com.sheepy.catchme.events.BallHitEvent;
+import com.sheepy.catchme.events.EventObserver;
+import com.sheepy.catchme.events.PickupItemEvent;
+import com.sheepy.catchme.events.WerewolfDoDamageEvent;
 import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
 
@@ -18,7 +21,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 
@@ -29,6 +31,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
     public static int GAME_WIDTH;
     public static int GAME_HEIGHT;
     public static TileMap tileMap;
+    public static EventObserver eventObserver;
     private final Set<Integer> pressed = new HashSet<Integer>();
     private List<Player> players;
     private List<Item> item;
@@ -43,6 +46,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         GameBoard.tileMap = new TileMap(64, 64);
         GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
         GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
+        eventObserver = new EventObserver();
 
         Werewolf _w = new Werewolf(32.0, 32.0);
         int[] pos1 = GameBoard.tileMap.getRandomGroundPosition();
@@ -58,11 +62,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         
         Item _i = new Item(500, 500);
         int[] pos3 = GameBoard.tileMap.getRandomGroundPosition();
-//        _i.setX(pos3[0]);
-//        _i.setY(pos3[1]);
+        _i.setX(pos3[0]);
+        _i.setY(pos3[1]);
 
         this.players.add(_w);
         this.players.add(_s);
+        
         this.item.add(_i);
 
         this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
@@ -144,7 +149,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
             Projectile proj = iterProj.next();
             if (proj instanceof Projectile) {
-                if (!proj.isInGameboard() || proj.getVector().getMagnitude() <= 0.4) {
+                if (!proj.isInGameboard() || proj.getVector().getLength() <= 0.4) {
                     iterProj.remove();
                     continue;
                 }
@@ -152,7 +157,14 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
                     Player player = iterPlayer.next();
                     if (player instanceof Sheep) {
                         if (proj.checkCollision(player.getHitbox())) {
-                            iterPlayer.remove();
+                        	if (proj instanceof Ball) {
+                        		eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
+                        		if (((Ball)proj).getOwner() instanceof Werewolf) {
+                            		eventObserver.onWerewolfDoDamage(
+                            				new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
+                            	}
+                        	}	
+                        	iterPlayer.remove();
                             iterProj.remove();
                             continue;
                         }
@@ -167,7 +179,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
             Item item = iterItem.next();
             for (Player player : this.players) {
                 if (item.checkCollision(player.getHitbox())) {
-                    item.buff(player);
+                	eventObserver.onPickup(new PickupItemEvent(player, item));
+                    // item.buff(player);
                     iterItem.remove();
                 }
             }
@@ -176,21 +189,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
 
         for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
             Player player = iterPlayer.next();
-//			if (player instanceof Sheep) {
-//				try {
-//					BufferedImage img = sheet.getSubimage(0, 0, 191, 191);
-//					System.out.println(img.toString());
-//					g2d.drawImage(img, (int)player.getX(), (int)player.getY(), 36, 36, null);
-//					g2d.setColor(new Color(128, 255, 128)); // int r, int g, int b
-////					g.drawImage(img, 0, 0, (int)this.getWidth(), (int)this.getHeight(), null);
-////					g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
-//					g2d.drawString(player.getName(), (int)player.getX(), (int)player.getY() - 5);
-//					continue;
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
             player.paint(g2d);
         }
 
@@ -237,7 +235,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
             System.out.println("x: " + e.getXOnScreen() + " " + e.getX());
             System.out.println("y: " + e.getYOnScreen() + " " + e.getY());
             vect.add((double) e.getX() - centerX, (double) e.getY() - centerY);
-            vect = vect.getNormalize();
+            vect = vect.getNormalized();
             System.out.println(vect);
 
             double playerCenterX = player.getX() + player.getWidth() / 2;

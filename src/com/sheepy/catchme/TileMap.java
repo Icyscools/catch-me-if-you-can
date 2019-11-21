@@ -2,9 +2,6 @@ package com.sheepy.catchme;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.sheepy.catchme.util.Colors;
 
 public class TileMap {
@@ -22,7 +19,7 @@ public class TileMap {
 
 	public void generateMap() {
 		// Genearate Random noise map
-		double bias = 0.1;
+		double bias = 0.25;
 		int[][] cloneTile = new int[this.height][this.width];
 		for (int row = 1; row < height - 1; row++) {
 			for (int col = 1; col < width - 1; col++) {

@@ -1,18 +1,17 @@
 package com.sheepy.catchme.entitys.entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
-import com.sheepy.catchme.Camera;
+import com.sheepy.catchme.GameBoard;
 import com.sheepy.catchme.SpriteSheet;
 import com.sheepy.catchme.entitys.Entitys;
+import com.sheepy.catchme.events.PickupItemEvent;
+import com.sheepy.catchme.events.PickupItemListener;
 import com.sheepy.catchme.util.Vector2D;
 
-public abstract class Player extends Entitys {
+public abstract class Player extends Entitys implements PickupItemListener {
 	
 	private String name;
 	protected SpriteSheet sheet;
@@ -41,6 +40,7 @@ public abstract class Player extends Entitys {
 	public Player(int x, int y, double width, double height, String name) {
 		super(x, y, width, height, new Vector2D(0, 0));
 		this.name = name;
+		GameBoard.eventObserver.addPickupListener(this);
 	}
 	
 	@Override
@@ -73,6 +73,13 @@ public abstract class Player extends Entitys {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+    
+    @Override
+    public void onPickupItem(PickupItemEvent event) {
+    	System.out.println(event.getPlayer().getName() + " pick up " + 
+    					   event.getItem().getName() + " at (" + event.getX() + ", " + event.getY() + ")");
+    	event.getItem().buff(this);
     }
 	
 }

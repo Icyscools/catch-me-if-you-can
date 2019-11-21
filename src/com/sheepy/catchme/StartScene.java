@@ -7,7 +7,7 @@ public class StartScene extends JPanel {
 	private JPanel buttons;
 	
 	public StartScene() {
-		fr = new JFrame("catch-me-if-you-can");
+		fr = new JFrame(Game.TITLE);
 		buttons = new JPanel(new GridBagLayout());
 		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

@@ -3,9 +3,7 @@ package com.sheepy.catchme.entitys;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 
-import com.sheepy.catchme.Game;
 import com.sheepy.catchme.GameBoard;
-import com.sheepy.catchme.TileMap;
 import com.sheepy.catchme.util.Vector2D;
 
 public abstract class Entitys {
@@ -14,8 +12,6 @@ public abstract class Entitys {
 	private double width;
 	private double height;
 	private Vector2D vect;
-	private Graphics2D hitbox;
-
 	public Entitys() {
 		this(0.0, 0.0, 1.0, 1.0, new Vector2D());
 	}

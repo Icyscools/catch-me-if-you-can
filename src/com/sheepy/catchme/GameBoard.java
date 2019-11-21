@@ -55,10 +55,15 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         _s.setX(pos1[0]);
         _s.setY(pos1[1]);
         _s.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+        
+        Item _i = new Item();
+        int[] pos3 = GameBoard.tileMap.getRandomGroundPosition();
+        _i.setX(pos3[0]);
+        _i.setY(pos3[1]);
 
         this.players.add(_w);
         this.players.add(_s);
-        this.item.add(new Item(500, 500));
+        this.item.add(_i);
 
         this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
         this.setBackground(Colors.blue);

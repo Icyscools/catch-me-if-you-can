@@ -5,11 +5,13 @@
  */
 package com.sheepy.catchme;
 
+import com.sheepy.catchme.util.Colors;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.awt.Color;
 
 /**
  *
@@ -51,7 +53,16 @@ public class WaitingRoom implements ActionListener {
         tf4.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         tf5.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         btn.setFont(new Font("TimesRoman", Font.BOLD, 25));
-
+        
+//        lb.setForeground(Colors.blue);
+        btn.setForeground(Colors.grey);
+        btn.setBackground(Color.white);
+        tf5.setForeground(Colors.red);
+        tf4.setForeground(Colors.blue);
+        tf3.setForeground(Colors.blue);
+        tf2.setForeground(Colors.blue);
+        tf1.setForeground(Colors.blue);
+        
         tf1.setHorizontalAlignment(JTextField.CENTER);
         tf2.setHorizontalAlignment(JTextField.CENTER);
         tf3.setHorizontalAlignment(JTextField.CENTER);

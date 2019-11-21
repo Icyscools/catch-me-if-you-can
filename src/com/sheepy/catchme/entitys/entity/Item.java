@@ -55,4 +55,9 @@ public class Item extends Entitys {
     public Shape getHitbox() {
         return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
+    
+    public void buff(Player p){
+        p.setStatus("Fast");
+        System.out.println("Fast");
+    }
 }

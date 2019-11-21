@@ -11,40 +11,50 @@ import com.sheepy.catchme.Camera;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
-public abstract class Player extends Entitys {	
-	private String name;
-	
-	public Player() {
-		this(0, 0, 25.0, 25.0, "tester");
-	}
-	
-	public Player(int x, int y) {
-		this(x, y, 25.0, 25.0, "tester");
-	}
-	
-	public Player(String name) {
-		this(0, 0, 25.0, 25.0, name);
-	}
-	
-	public Player(int x, int y, double width, double height, String name) {
-		super(x, y, width, height, new Vector2D(0, 0));
-		this.name = name;
-	}
-	
-	@Override
-	public abstract void paint(Graphics2D g);
+public abstract class Player extends Entitys {
 
-	@Override
-	public Shape getHitbox() {
-		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-	}
+    private String name;
+    private String status="None";
 
-	public String getName() {
-		return name;
-	}
+    public Player() {
+        this(0, 0, 25.0, 25.0, "tester");
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
+    public Player(int x, int y) {
+        this(x, y, 25.0, 25.0, "tester");
+    }
+
+    public Player(String name) {
+        this(0, 0, 25.0, 25.0, name);
+    }
+
+    public Player(int x, int y, double width, double height, String name) {
+        super(x, y, width, height, new Vector2D(0, 0));
+        this.name = name;
+    }
+
+    @Override
+    public abstract void paint(Graphics2D g);
+
+    @Override
+    public Shape getHitbox() {
+        return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

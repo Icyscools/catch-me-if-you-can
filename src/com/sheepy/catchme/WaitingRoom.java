@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
  *
  * @author ckrittima, Icyscools
  */
-public class LobbyGUI implements ActionListener {
+public class WaitingRoom implements ActionListener {
 
     private JFrame fr;
     private JPanel p1, p2, p3;
@@ -64,7 +64,7 @@ public class LobbyGUI implements ActionListener {
         tf5.setText("Wolf");
 
         fr.setLayout(new BorderLayout());
-        p1.setLayout(new GridLayout(5, 1));
+        p1.setLayout(new GridLayout(1, 5));
         p2.setLayout(new FlowLayout());
         p1.add(tf1);
         p1.add(tf2);
@@ -85,7 +85,7 @@ public class LobbyGUI implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new LobbyGUI().init();
+        new WaitingRoom().init();
     }
 
     @Override

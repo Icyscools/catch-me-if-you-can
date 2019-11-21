@@ -10,7 +10,7 @@ import com.sheepy.catchme.util.Colors;
 public class TileMap {
 
 	private int mapTile[][];
-	private static int tileSize = 64;
+	private static int tileSize = 48;
 	private int width, height;
 
 	public TileMap(int width, int height) {

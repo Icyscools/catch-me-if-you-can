@@ -56,10 +56,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         _s.setY(pos1[1]);
         _s.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
         
-        Item _i = new Item();
+        Item _i = new Item(500, 500);
         int[] pos3 = GameBoard.tileMap.getRandomGroundPosition();
-        _i.setX(pos3[0]);
-        _i.setY(pos3[1]);
+//        _i.setX(pos3[0]);
+//        _i.setY(pos3[1]);
 
         this.players.add(_w);
         this.players.add(_s);
@@ -82,7 +82,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
                 Vector2D v = p.getVector();
                 double dx = 0, dy = 0;
                 if (this.pressed.contains(65)) {
-                    if (p.getStatus().equals("Fast")) {
+                    if (p.getStatus().equals("Speed Boost")) {
                         dx -= 7.5;
                     } else {
                         dx -= 5;
@@ -90,21 +90,21 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
 
                 }
                 if (this.pressed.contains(68)) {
-                    if (p.getStatus().equals("Fast")) {
+                    if (p.getStatus().equals("Speed Boost")) {
                         dx += 7.5;
                     } else {
                         dx += 5;
                     }
                 }
                 if (this.pressed.contains(87)) {
-                    if (p.getStatus().equals("Fast")) {
+                    if (p.getStatus().equals("Speed Boost")) {
                         dy -= 7.5;
                     } else {
                         dy -= 5;
                     }
                 }
                 if (this.pressed.contains(83)) {
-                    if (p.getStatus().equals("Fast")) {
+                    if (p.getStatus().equals("Speed Boost")) {
                         dy += 7.5;
                     } else {
                         dy += 5;
@@ -144,7 +144,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
         for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
             Projectile proj = iterProj.next();
             if (proj instanceof Projectile) {
-                if (!proj.isInGameboard()) {
+                if (!proj.isInGameboard() || proj.getVector().getMagnitude() <= 0.4) {
                     iterProj.remove();
                     continue;
                 }
@@ -227,8 +227,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
     public void mousePressed(MouseEvent e) {
         // is left click ?
         // MouseEvent.BUTTON1 = left click
-        if (e.getButton() == MouseEvent.BUTTON1 && (timeTick - ballDelay >= 2000 || ballDelay == 0.0)) {
-            Player player = this.players.get(0);
+    	Player player = this.players.get(0);
+        if (e.getButton() == MouseEvent.BUTTON1 &&(timeTick - ballDelay >= 2000 || ballDelay == 0.0 || (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {           
             double projSize = 20.0;
             double centerX = Game.WINDOW_WIDTH / 2;
             double centerY = Game.WINDOW_HEIGHT / 2;

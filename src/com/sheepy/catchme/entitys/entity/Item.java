@@ -6,6 +6,7 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import com.sheepy.catchme.entitys.Entitys;
+import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
 
 public class Item extends Entitys {
@@ -57,7 +58,19 @@ public class Item extends Entitys {
     }
     
     public void buff(Player p){
-        p.setStatus("Fast");
-        System.out.println("Fast");
+//    	int random = (int) (Math.random() * 2);
+//    	System.out.println(random);
+//    	switch (random) {
+//		case 1:
+//			p.setStatus("Speed Boost");
+//			System.out.println("Speed Boost");
+//			break;
+//		case 2:
+//			p.setStatus("Fast Reload");
+//			System.out.println("Fast Reload");
+//			break;
+//		default:
+//		}
+    	p.setStatus("Fast Reload");
     }
 }

@@ -14,23 +14,27 @@ public class Game {
 	public static int WINDOW_WIDTH = 640;
 	public static int WINDOW_HEIGHT = 640;
 	public static int TICK = 25;
+	public static String TITLE = "Catch me if you can";
 	public static JFrame frame;
-        
+	
 	public static void main(String[] args) throws InterruptedException {
-		frame = new JFrame("Game");
+		Game.frame = new JFrame("Game");
+		startGame(Game.frame);
+	}
+	
+	public static void startGame(JFrame frame) throws InterruptedException {
+		frame.getContentPane().removeAll();
 		GameBoard game = new GameBoard();
 		frame.add(game, BorderLayout.CENTER);
 		frame.pack();
-		frame.setTitle("Catch me if you can");
+		frame.setTitle(Game.TITLE);
 		frame.setVisible(true);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		while (true) {
-			if (game.getGameState() == GameState.RUNNING) {
-				game.update();
-				Thread.sleep(TICK);
-			}
-		}
+		
+		frame.addMouseListener(game);
+		frame.addKeyListener(game);
+		frame.setFocusable(true);
+		frame.requestFocus();
+		new Thread(game).start();
 	}
 }

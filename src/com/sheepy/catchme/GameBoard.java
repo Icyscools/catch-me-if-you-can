@@ -19,7 +19,7 @@ import java.awt.RenderingHints;
 import java.awt.event.*;
 import java.util.*;
 
-public class GameBoard extends JPanel implements KeyListener, MouseListener {
+public class GameBoard extends JPanel implements KeyListener, MouseListener, Runnable {
 
 	private static double timeTick;
 	private static double ballDelay;
@@ -31,7 +31,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 	private List<Item> item;
 	private List<Projectile> projectiles;
 	private GameState state;
-
 
 	public GameBoard() throws InterruptedException {
 		this.players = new ArrayList<Player>();
@@ -58,35 +57,43 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener {
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.blue);
 		this.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		this.addKeyListener(this);
-		this.addMouseListener(this);
-		this.setFocusable(true);
+		// this.addKeyListener(this);
+		// this.addMouseListener(this);
+		// this.setFocusable(true);
+		// this.requestFocus();
 	}
 
-	public void update() {
-		Player p = this.players.get(0);
-		Vector2D v = p.getVector();
-		double dx = 0, dy = 0;
-		if (this.pressed.contains(65)) {
-			dx -= 5;
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				Player p = this.players.get(0);
+				Vector2D v = p.getVector();
+				double dx = 0, dy = 0;
+				if (this.pressed.contains(65)) {
+					dx -= 5;
+				}
+				if (this.pressed.contains(68)) {
+					dx += 5;
+				}
+				if (this.pressed.contains(87)) {
+					dy -= 5;
+				}
+				if (this.pressed.contains(83)) {
+					dy += 5;
+				}
+
+				v.setX(dx);
+				v.setY(dy);
+				timeTick += Game.TICK;
+
+				this.players.get(0).move();
+				this.repaint();
+				Thread.sleep(Game.TICK);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-		if (this.pressed.contains(68)) {
-			dx += 5;
-		}
-		if (this.pressed.contains(87)) {
-			dy -= 5;
-		}
-		if (this.pressed.contains(83)) {
-			dy += 5;
-		}
-		
-		v.setX(dx);
-		v.setY(dy);
-		timeTick += Game.TICK;
-		// System.out.println(this.tileMap.getTile(this.players.get(0).getX(), this.players.get(0).getY()));
-		
-		this.players.get(0).move();
-		this.repaint();
 	}
 
 	public void paint(Graphics g) {

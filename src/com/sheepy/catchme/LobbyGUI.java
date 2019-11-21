@@ -5,19 +5,14 @@
  */
 package com.sheepy.catchme;
 
-import static com.sheepy.catchme.Game.TICK;
-import com.sheepy.catchme.entitys.entity.Player;
-import com.sheepy.catchme.enums.GameState;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- * @author ckrittima
+ * @author ckrittima, Icyscools
  */
 public class LobbyGUI implements ActionListener {
 
@@ -28,7 +23,7 @@ public class LobbyGUI implements ActionListener {
     private JButton btn;
 
     public void init() {
-        fr = new JFrame("Catch me if you can");
+        fr = new JFrame(Game.TITLE);
         p1 = new JPanel();
         p2 = new JPanel();
         p3 = new JPanel();
@@ -99,13 +94,13 @@ public class LobbyGUI implements ActionListener {
             p1.setVisible(false);
             p2.setVisible(false);
             p3.setVisible(false);
-            GameBoard game = null;
+            
             try {
-                game = new GameBoard();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(LobbyGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            fr.add(game, BorderLayout.CENTER);
+				Game.startGame(this.fr);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
     }
 }

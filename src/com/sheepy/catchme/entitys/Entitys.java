@@ -5,6 +5,7 @@ import java.awt.Shape;
 
 import com.sheepy.catchme.Game;
 import com.sheepy.catchme.GameBoard;
+import com.sheepy.catchme.TileMap;
 import com.sheepy.catchme.util.Vector2D;
 
 public abstract class Entitys {
@@ -49,6 +50,8 @@ public abstract class Entitys {
 				GameBoard.tileMap.getTile(nx + this.width, ny + this.height) > 0) {
 				this.x = nx;
 				this.y = ny;
+			} else {
+//				this.x = nx - (nx - (int)(Math.ceil(nx / TileMap.getTileSize()) * TileMap.getTileSize()));
 			}
 		}
 	}

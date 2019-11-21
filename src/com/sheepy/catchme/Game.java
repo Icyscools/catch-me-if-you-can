@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -17,12 +18,12 @@ public class Game {
 	public static String TITLE = "Catch me if you can";
 	public static JFrame frame;
 	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, IOException {
 		Game.frame = new JFrame("Game");
 		startGame(Game.frame);
 	}
 	
-	public static void startGame(JFrame frame) throws InterruptedException {
+	public static void startGame(JFrame frame) throws InterruptedException, IOException {
 		frame.getContentPane().removeAll();
 		GameBoard game = new GameBoard();
 		frame.add(game, BorderLayout.CENTER);

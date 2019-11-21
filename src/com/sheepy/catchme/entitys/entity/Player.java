@@ -8,11 +8,14 @@ import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
 import com.sheepy.catchme.Camera;
+import com.sheepy.catchme.SpriteSheet;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.util.Vector2D;
 
-public abstract class Player extends Entitys {	
+public abstract class Player extends Entitys {
+	
 	private String name;
+	protected SpriteSheet sheet;
 	
 	public Player() {
 		this(0, 0, 25.0, 25.0, "tester");
@@ -24,6 +27,14 @@ public abstract class Player extends Entitys {
 	
 	public Player(String name) {
 		this(0, 0, 25.0, 25.0, name);
+	}
+	
+	public Player(double width, double height) {
+		this(0, 0, width, height, "tester");
+	}
+	
+	public Player(double width, double height, String name) {
+		this(0, 0, width, height, name);
 	}
 	
 	public Player(int x, int y, double width, double height, String name) {
@@ -46,5 +57,14 @@ public abstract class Player extends Entitys {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public SpriteSheet getSpriteSheet() {
+		return this.sheet;
+	}
+	
+	public void setSpriteSheet(SpriteSheet sheet) {
+		this.sheet = sheet;
+	}
+
 	
 }

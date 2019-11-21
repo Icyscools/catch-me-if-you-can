@@ -1,5 +1,6 @@
 package com.sheepy.catchme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import com.sheepy.catchme.entitys.entity.Player;
 import com.sheepy.catchme.entitys.entity.Sheep;
@@ -17,6 +18,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 
 public class GameBoard extends JPanel implements KeyListener, MouseListener, Runnable {
@@ -32,7 +35,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
 	private List<Projectile> projectiles;
 	private GameState state;
 
-	public GameBoard() throws InterruptedException {
+	public GameBoard() throws InterruptedException, IOException {
 		this.players = new ArrayList<Player>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
@@ -41,15 +44,18 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 
-		Werewolf _w = new Werewolf();
+		Werewolf _w = new Werewolf(32.0, 32.0);
 		int[] pos1 = GameBoard.tileMap.getRandomGroundPosition();
 		_w.setX(pos1[0]);
 		_w.setY(pos1[1]);
-		Sheep _s = new Sheep();
+		_w.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+		
+		Sheep _s = new Sheep(32.0, 32.0);
 		int[] pos2 = GameBoard.tileMap.getRandomGroundPosition();
-		_s.setX(pos2[0]);
-		_s.setY(pos2[1]);
-
+		_s.setX(pos1[0]);
+		_s.setY(pos1[1]);
+		_s.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+		
 		this.players.add(_w);
 		this.players.add(_s);
 		this.item.add(new Item(500, 500));
@@ -147,6 +153,21 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
 
 		for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
 			Player player = iterPlayer.next();
+//			if (player instanceof Sheep) {
+//				try {
+//					BufferedImage img = sheet.getSubimage(0, 0, 191, 191);
+//					System.out.println(img.toString());
+//					g2d.drawImage(img, (int)player.getX(), (int)player.getY(), 36, 36, null);
+//					g2d.setColor(new Color(128, 255, 128)); // int r, int g, int b
+////					g.drawImage(img, 0, 0, (int)this.getWidth(), (int)this.getHeight(), null);
+////					g.fillRect((int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight());
+//					g2d.drawString(player.getName(), (int)player.getX(), (int)player.getY() - 5);
+//					continue;
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 			player.paint(g2d);
 		}
 

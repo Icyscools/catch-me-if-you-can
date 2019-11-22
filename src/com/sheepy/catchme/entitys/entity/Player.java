@@ -16,6 +16,7 @@ public abstract class Player extends Entitys implements PickupItemListener {
 	private String name;
 	protected SpriteSheet sheet;
 	private String status="None";
+    private int buffDuration=200;
 	
 	public Player() {
 		this(0, 0, 25.0, 25.0, "tester");
@@ -75,7 +76,15 @@ public abstract class Player extends Entitys implements PickupItemListener {
         this.status = status;
     }
     
-    @Override
+    public int getBuffDuration() {
+		return buffDuration;
+	}
+
+	public void setBuffDuration(int buffDuration) {
+		this.buffDuration = buffDuration;
+	}
+
+	@Override
     public void onPickupItem(PickupItemEvent event) {
     	System.out.println(event.getPlayer().getName() + " pick up " + 
     					   event.getItem().getName() + " at (" + event.getX() + ", " + event.getY() + ")");

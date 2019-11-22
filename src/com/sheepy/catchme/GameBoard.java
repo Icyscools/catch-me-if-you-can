@@ -115,6 +115,16 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
                         dy += 5;
                     }
                 }
+                
+                if (!p.getStatus().equals("None")){
+                	if (p.getBuffDuration()-1 == 0) {
+                		p.setStatus("None");
+                		System.out.println(timeTick%1000);
+                		System.out.println("Effect worn out");
+                	}
+                	else
+                		p.setBuffDuration(p.getBuffDuration()-1);
+                }
 
                 v.setX(dx);
                 v.setY(dy);
@@ -180,7 +190,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Run
             for (Player player : this.players) {
                 if (item.checkCollision(player.getHitbox())) {
                 	eventObserver.onPickup(new PickupItemEvent(player, item));
-                    // item.buff(player);
                     iterItem.remove();
                 }
             }

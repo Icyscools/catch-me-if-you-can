@@ -9,14 +9,17 @@ import com.sheepy.catchme.SpriteSheet;
 import com.sheepy.catchme.entitys.Entitys;
 import com.sheepy.catchme.events.PickupItemEvent;
 import com.sheepy.catchme.events.PickupItemListener;
+import com.sheepy.catchme.events.PlayerMoveEvent;
+import com.sheepy.catchme.events.PlayerMoveListener;
+import com.sheepy.catchme.events.PlayerStandingEvent;
 import com.sheepy.catchme.util.Vector2D;
 
-public abstract class Player extends Entitys implements PickupItemListener {
+public abstract class Player extends Entitys implements PickupItemListener, PlayerMoveListener {
 	
 	private String name;
 	protected SpriteSheet sheet;
-	private String status="None";
-    private int buffDuration=200;
+	private String status = "None";
+    private int buffDuration = 200;
 	
 	public Player() {
 		this(0, 0, 25.0, 25.0, "tester");
@@ -42,15 +45,11 @@ public abstract class Player extends Entitys implements PickupItemListener {
 		super(x, y, width, height, new Vector2D(0, 0));
 		this.name = name;
 		GameBoard.eventObserver.addPickupListener(this);
+		GameBoard.eventObserver.addPlayerMoveListener(this);
 	}
 	
 	@Override
 	public abstract void paint(Graphics2D g);
-
-	@Override
-	public Shape getHitbox() {
-		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-	}
 
 	public String getName() {
 		return name;
@@ -85,10 +84,30 @@ public abstract class Player extends Entitys implements PickupItemListener {
 	}
 
 	@Override
+	public Shape getHitbox() {
+		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+	}
+
+	@Override
     public void onPickupItem(PickupItemEvent event) {
     	System.out.println(event.getPlayer().getName() + " pick up " + 
     					   event.getItem().getName() + " at (" + event.getX() + ", " + event.getY() + ")");
     	event.getItem().buff(this);
     }
+	
+	@Override
+	public void onPlayerMove(PlayerMoveEvent event) {
+		if (event.getPlayer().equals(this)) {
+			this.sheet.startAnimation();
+		}
+	}
+	
+
+	@Override
+	public void onPlayerStanding(PlayerStandingEvent event) {
+		if (event.getPlayer().equals(this)) {
+			this.sheet.stopAnimation();
+		}
+	}
 	
 }

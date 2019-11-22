@@ -34,6 +34,7 @@ public class Game {
 		
 		frame.addMouseListener(game);
 		frame.addKeyListener(game);
+		frame.addWindowListener(game);
 		frame.setFocusable(true);
 		frame.requestFocus();
 		new Thread(game).start();

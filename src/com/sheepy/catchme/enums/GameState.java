@@ -1,7 +1,8 @@
 package com.sheepy.catchme.enums;
 
 public enum GameState {
-	READY,
+	STANDBY,
 	RUNNING,
-	PAUSE
+	PAUSE,
+	END
 }

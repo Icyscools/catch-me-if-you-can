@@ -4,6 +4,10 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 
 import com.sheepy.catchme.GameBoard;
+import com.sheepy.catchme.entitys.entity.Player;
+import com.sheepy.catchme.events.PickupItemEvent;
+import com.sheepy.catchme.events.PlayerMoveEvent;
+import com.sheepy.catchme.events.PlayerStandingEvent;
 import com.sheepy.catchme.util.Vector2D;
 
 public abstract class Entitys {
@@ -36,18 +40,28 @@ public abstract class Entitys {
 		if (this instanceof Projectile) {
 			this.x += this.vect.getX();
 			this.y += this.vect.getY();
-		} else {
+		} else if (this.vect.getX() != 0 || this.vect.getY() != 0) {
 			double nx = Math.max(Math.min(this.vect.getX() + this.x, GameBoard.GAME_WIDTH - this.width), 0);
 			double ny = Math.max(Math.min(this.vect.getY() + this.y, GameBoard.GAME_HEIGHT - this.height), 0);
 
 			if (GameBoard.tileMap.getTile(nx, ny) > 0 &&
-				GameBoard.tileMap.getTile(nx + this.width, ny) > 0 &&
-				GameBoard.tileMap.getTile(nx, ny + this.height) > 0 &&
-				GameBoard.tileMap.getTile(nx + this.width, ny + this.height) > 0) {
+					GameBoard.tileMap.getTile(nx + this.width, ny) > 0 &&
+					GameBoard.tileMap.getTile(nx, ny + this.height) > 0 &&
+					GameBoard.tileMap.getTile(nx + this.width, ny + this.height) > 0) {
 				this.x = nx;
 				this.y = ny;
+				if (this instanceof Player) {
+					GameBoard.eventObserver.onPlayerMove(new PlayerMoveEvent((Player) this, this.vect.clone()));
+				}
 			} else {
-//				this.x = nx - (nx - (int)(Math.ceil(nx / TileMap.getTileSize()) * TileMap.getTileSize()));
+				if (this instanceof Player) {
+					GameBoard.eventObserver.onPlayerStanding(new PlayerStandingEvent((Player) this));
+					// this.x = nx - (nx - (int)(Math.ceil(nx / TileMap.getTileSize()) * TileMap.getTileSize()));
+				}
+			}
+		} else {
+			if (this instanceof Player) {
+				GameBoard.eventObserver.onPlayerStanding(new PlayerStandingEvent((Player) this));
 			}
 		}
 	}

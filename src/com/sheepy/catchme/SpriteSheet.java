@@ -14,6 +14,7 @@ public class SpriteSheet {
 	private int spriteHeight;
 	private int step;
 	private int maxStep;
+	private boolean animationRunning = false;
 	
 	public SpriteSheet(String path, int frame) throws IOException {
 		this.sheet = ImageIO.read(getClass().getResource(path));
@@ -24,7 +25,7 @@ public class SpriteSheet {
 	}
 	
 	public BufferedImage getSprite() {
-		return this.getSprite(this.step++ % this.maxStep);
+		return this.getSprite(animationRunning ? this.step++ % this.maxStep : 0);
 	}
 	
 	public BufferedImage getSprite(int step) {
@@ -36,4 +37,21 @@ public class SpriteSheet {
 	public BufferedImage getSpriteSheet() {
 		return sheet;
 	}
+	
+	public int getStep() {
+		return this.step;
+	}
+	
+	public void setStep(int step) {
+		this.step = step;
+	}
+
+	public void startAnimation() {
+		this.animationRunning = true;
+	}
+	
+	public void stopAnimation() {
+		this.animationRunning = false;
+	}
+	
 }

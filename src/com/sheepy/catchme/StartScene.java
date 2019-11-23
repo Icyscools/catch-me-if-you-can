@@ -19,7 +19,7 @@ public class StartScene extends JPanel {
 		bn1.setBorder(null);
 		bn1.setBackground(Color.cyan);
 		
-        this.add(bn1);
+                this.add(bn1);
 		fr.add(this);
 		fr.setSize(640, 640);
 		fr.setResizable(false);

@@ -47,21 +47,35 @@ public class WaitingRoom implements ActionListener {
         tf5.setEditable(false);
 
         lb.setFont(new Font("TimesRoman", Font.BOLD, 45));
-        tf1.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        tf2.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        tf3.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        tf4.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        tf5.setFont(new Font("TimesRoman", Font.PLAIN, 30));
+        tf1.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        tf2.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        tf3.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        tf4.setFont(new Font("TimesRoman", Font.BOLD, 30));
+        tf5.setFont(new Font("TimesRoman", Font.BOLD, 30));
         btn.setFont(new Font("TimesRoman", Font.BOLD, 25));
         
-//        lb.setForeground(Colors.blue);
-        btn.setForeground(Colors.grey);
         btn.setBackground(Color.white);
-        tf5.setForeground(Colors.red);
-        tf4.setForeground(Colors.blue);
-        tf3.setForeground(Colors.blue);
-        tf2.setForeground(Colors.blue);
-        tf1.setForeground(Colors.blue);
+        tf1.setBackground(Colors.lred);
+        tf2.setBackground(Colors.lyellow);
+        tf3.setBackground(Colors.lgreen);
+        tf4.setBackground(Colors.lblue);
+        tf5.setBackground(Colors.lviolet);
+        p2.setBackground(Color.white);
+        p3.setBackground(Color.white);
+        
+        btn.setForeground(Colors.blue);
+        lb.setForeground(Colors.blue);
+        tf5.setForeground(Color.white);
+        tf4.setForeground(Color.white);
+        tf3.setForeground(Color.white);
+        tf2.setForeground(Color.white);
+        tf1.setForeground(Color.white);
+        
+        tf1.setBorder(null);
+        tf2.setBorder(null);
+        tf3.setBorder(null);
+        tf4.setBorder(null);
+        tf5.setBorder(null);
         
         tf1.setHorizontalAlignment(JTextField.CENTER);
         tf2.setHorizontalAlignment(JTextField.CENTER);

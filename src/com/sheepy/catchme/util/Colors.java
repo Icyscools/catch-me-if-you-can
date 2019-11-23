@@ -9,8 +9,9 @@ public class Colors {
 	public static final Color green = new Color(30, 120, 30);
 	public static final Color lightgreen = new Color(144, 238, 144);
 	public static final Color grass = new Color(141, 191, 57);
-	public static final Color red = new Color(252,39,15);
-	public static final Color violet = new Color(82,47,140);
-	public static final Color grey = new Color(62,63,66);
-
+	public static final Color lred = new Color(179,9,55);
+        public static final Color lgreen = new Color(0,140,120);
+	public static final Color lviolet = new Color(67,0,92);
+	public static final Color lyellow = new Color(255,188,92);
+        public static final Color lblue = new Color(74,197,217,255);
 }

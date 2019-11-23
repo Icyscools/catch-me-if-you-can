@@ -117,6 +117,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 						dy += 5;
 					}
 				}
+				
+				if (p.getStatus().equals("Transform") && p.getSpriteSheet().getMaxStep() != 19) {
+	                p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+	            }
 
 				if (!p.getStatus().equals("None")){
 					if (p.getBuffDuration() - 1 == 0) {
@@ -136,6 +140,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				this.repaint();
 				Thread.sleep(Game.TICK);
 			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

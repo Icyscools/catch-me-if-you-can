@@ -67,12 +67,12 @@ public class Item extends Entitys {
 			p.setStatus("Fast Reload");
 			System.out.println("Fast Reload");
 			break;
-		case 3:
-			//Sheep Item
-			break;
-		case 4:
-			//Sheep Item
-			break;
+//		case 3:
+//			//Sheep Item
+//			break;
+//		case 4:
+//			//Sheep Item
+//			break;
 		default:
 			p.setStatus("Speed Boost");
 			System.out.println("Speed Boost");

@@ -54,4 +54,7 @@ public class SpriteSheet {
 		this.animationRunning = false;
 	}
 	
+	public int getMaxStep() {
+		return this.maxStep;
+	}	
 }

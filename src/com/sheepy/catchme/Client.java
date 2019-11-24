@@ -129,7 +129,7 @@ public class Client implements ActionListener {
 			try {
 				status.setText("Connecting to Server....");
 				this.startConnection("127.0.0.1", 5555, "login");
-				new StartScene().init();
+				new StartScene();
 			}
 			catch (Exception ex) {
 				status.setText(ex.toString());

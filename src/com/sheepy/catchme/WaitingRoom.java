@@ -103,8 +103,8 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		p1.add(tf3);
 		p1.add(tf4);
 		p1.add(tf5);
-		p2.add(btn1);
 		p2.add(btn);
+		p2.add(btn1);
 		p3.add(lb);
 
 		this.add(p1, BorderLayout.CENTER);

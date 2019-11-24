@@ -62,7 +62,6 @@ public class StartScene extends JPanel implements ActionListener {
 		try {
 			BufferedImage img = ImageIO.read(getClass().getResource("image/game_start.png"));
 			g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-			System.out.println(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}  

@@ -1,5 +1,6 @@
 package com.sheepy.catchme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import com.sheepy.catchme.entitys.entity.Player;
 import com.sheepy.catchme.entitys.entity.Sheep;
@@ -25,12 +26,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 
 public class GameBoard extends JPanel implements KeyListener, MouseListener, WindowListener, GameListener, Runnable {
 
 	private static double timeTick;
+	private static double maximumTimeTick = 2 * 1000;
 	private static double ballDelay;
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;
@@ -41,6 +44,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	private List<Item> item;
 	private List<Projectile> projectiles;
 	private GameState state;
+	private BufferedImage endingScene;
 
 	public GameBoard() throws InterruptedException, IOException {
 		this.players = new ArrayList<Player>();
@@ -59,7 +63,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		_w.setY(pos[1]);
 		_w.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
 		this.players.add(_w);
-		
+
 		// Spawn Sheep
 		for (int i = 0; i < 4; i++) {
 			Sheep _s = new Sheep(32.0, 32.0, "Sheep " + (i + 1));
@@ -81,7 +85,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.blue);
 		this.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		
+
 		eventObserver.addGameListeners(this);
 		eventObserver.onGameStart(new GameStartEvent(this));
 	}
@@ -90,7 +94,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void run() {
 		while (this.getGameState() == GameState.RUNNING) {
 			try {
-				Player p = this.players.get(1);
+				Player p = this.players.get(0);
 				Vector2D v = p.getVector();
 				double dx = 0, dy = 0;
 				if (this.pressed.contains(65)) {
@@ -121,10 +125,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 						dy += 5;
 					}
 				}
-				
+
 				if (p.getStatus().equals("Transform") && p.getSpriteSheet().getMaxStep() != 19) {
-	                p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
-	            }
+					p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+				}
 
 				if (!p.getStatus().equals("None")){
 					if (p.getBuffDuration() - 1 == 0) {
@@ -141,8 +145,23 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 				timeTick += Game.TICK;
 
-				this.repaint();
-				Thread.sleep(Game.TICK);
+				if (maximumTimeTick < timeTick || this.players.size() <= 1) {
+					this.setGameState(GameState.END);
+					String winTeam = "";
+					if (this.players.size() > 1) {
+						this.players.remove(0);
+						winTeam = "Sheep";
+					} else {
+						Player p1 = this.players.get(0);
+						this.players.clear();
+						this.players.add(p1);
+						winTeam = "Werewolf";
+					}
+					eventObserver.onGameEnd(new GameEndEvent(this, winTeam, this.players));
+				} else {
+					this.repaint();
+					Thread.sleep(Game.TICK);
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -157,73 +176,78 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		// Translate screen to player
-		g2d.translate(-this.players.get(1).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(1).getY() + Game.WINDOW_HEIGHT / 2);
+		if (this.getGameState() == GameState.RUNNING) {
 
-		// Clear screen
-		g.setColor(new Color(0, 0, 0)); // int r, int g, int b
-		g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+			// Translate screen to player
+			g2d.translate(-this.players.get(1).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(1).getY() + Game.WINDOW_HEIGHT / 2);
 
-		// Render Map
-		GameBoard.tileMap.paint(g2d);
+			// Clear screen
+			g.setColor(new Color(0, 0, 0)); // int r, int g, int b
+			g.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
-		// Render Entity
-		for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
-			Projectile proj = iterProj.next();
-			if (proj instanceof Projectile) {
-				if (!proj.isInGameboard() || proj.getVector().getLength() <= 0.4) {
-					iterProj.remove();
-					continue;
-				}
-				for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
-					Player player = iterPlayer.next();
-					if (player instanceof Sheep) {
-						if (proj.checkCollision(player.getHitbox())) {
-							if (proj instanceof Ball) {
-								eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
-								if (((Ball)proj).getOwner() instanceof Werewolf) {
-									eventObserver.onWerewolfDoDamage(
-											new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
-								}
-							}	
-							iterPlayer.remove();
-							iterProj.remove();
-							continue;
+			// Render Map
+			GameBoard.tileMap.paint(g2d);
+
+			// Render Entity
+			for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
+				Projectile proj = iterProj.next();
+				if (proj instanceof Projectile) {
+					if (!proj.isInGameboard() || proj.getVector().getLength() <= 0.4) {
+						iterProj.remove();
+						continue;
+					}
+					for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
+						Player player = iterPlayer.next();
+						if (player instanceof Sheep) {
+							if (proj.checkCollision(player.getHitbox())) {
+								if (proj instanceof Ball) {
+									eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
+									if (((Ball)proj).getOwner() instanceof Werewolf) {
+										eventObserver.onWerewolfDoDamage(
+												new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
+									}
+								}	
+								iterPlayer.remove();
+								iterProj.remove();
+								continue;
+							}
 						}
 					}
 				}
+				proj.move();
+				proj.paint(g2d);
 			}
-			proj.move();
-			proj.paint(g2d);
-		}
 
-		for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
-			Item item = iterItem.next();
-			for (Player player : this.players) {
-				if (item.checkCollision(player.getHitbox())) {
-					eventObserver.onPickup(new PickupItemEvent(player, item));
-					iterItem.remove();
+			for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
+				Item item = iterItem.next();
+				for (Player player : this.players) {
+					if (item.checkCollision(player.getHitbox())) {
+						eventObserver.onPickup(new PickupItemEvent(player, item));
+						iterItem.remove();
+					}
 				}
+				item.paint(g2d);
 			}
-			item.paint(g2d);
-		}
 
-		for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
-			Player player = iterPlayer.next();
-			player.paint(g2d);
-		}
-		
-		g2d.translate(this.players.get(1).getX() - Game.WINDOW_WIDTH / 2, this.players.get(1).getY() - Game.WINDOW_HEIGHT / 2);
+			for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
+				Player player = iterPlayer.next();
+				player.paint(g2d);
+			}
 
-		g2d.setColor(Color.BLACK);
-		g2d.setFont(new Font("Kanit", Font.PLAIN, 24));
-		g2d.drawString("" + (int)(90 - Math.ceil(GameBoard.timeTick / 1000)), (int)Game.WINDOW_WIDTH / 2, 30);
+			g2d.translate(this.players.get(1).getX() - Game.WINDOW_WIDTH / 2, this.players.get(1).getY() - Game.WINDOW_HEIGHT / 2);
+
+			g2d.setColor(Color.BLACK);
+			g2d.setFont(new Font("Kanit", Font.PLAIN, 24));
+			g2d.drawString("" + (int)(90 - Math.ceil(GameBoard.timeTick / 1000)), (int)Game.WINDOW_WIDTH / 2, 30);
+		} else if (this.getGameState() == GameState.END) {
+			g.drawImage(endingScene, 0, 0, this.getWidth(), this.getHeight(), null);
+		}
 	}
 
 	public GameState getGameState() {
 		return this.state;
 	}
-	
+
 	public void setGameState(GameState state) {
 		this.state = state;
 	}
@@ -293,7 +317,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	@Override
 	public void mouseExited(MouseEvent e) {
 	}
-	
+
 	/*
 	 * Window Event
 	 */
@@ -336,8 +360,17 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 	@Override
 	public void onGameEnd(GameEndEvent event) {
-		if (event.getGame().equals(this)) {
-			
+		try {
+			if (event.getGame().equals(this)) {
+				if (event.getWinnerTeam().equals("Werewolf")) {
+					endingScene = ImageIO.read(getClass().getResource("image/Wolf-win.png"));
+				} else {
+					endingScene = ImageIO.read(getClass().getResource("image/Sheep-win.png"));
+				}
+				this.repaint();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

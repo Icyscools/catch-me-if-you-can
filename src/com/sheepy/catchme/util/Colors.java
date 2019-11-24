@@ -13,5 +13,7 @@ public class Colors {
         public static final Color lgreen = new Color(0,140,120);
 	public static final Color lviolet = new Color(67,0,92);
 	public static final Color lyellow = new Color(255,188,92);
-        public static final Color lblue = new Color(74,197,217,255);
+        public static final Color lblue = new Color(74,197,217);
+        public static final Color lgrey = new Color(242,242,242);
+        
 }

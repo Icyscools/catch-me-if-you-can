@@ -25,6 +25,7 @@ public class StartScene extends JPanel {
                 bn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
                 bn3.setFont(new Font("TimesRoman", Font.BOLD, 20));
 		
+                
                 p0.add(bn1);
 //                System.out.println("add1");
                 p0.add(new JLabel());

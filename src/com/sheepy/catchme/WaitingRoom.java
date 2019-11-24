@@ -23,7 +23,7 @@ public class WaitingRoom implements ActionListener {
     private JPanel p1, p2, p3;
     private JLabel lb;
     private JTextField tf1, tf2, tf3, tf4, tf5;
-    private JButton btn;
+    private JButton btn, btn1;
 
     public void init() {
         fr = new JFrame(Game.TITLE);
@@ -37,8 +37,10 @@ public class WaitingRoom implements ActionListener {
         tf4 = new JTextField();
         tf5 = new JTextField();
         btn = new JButton("Start");
+        btn1 = new JButton("Leave");
 
         btn.addActionListener(this);
+        btn1.addActionListener(this);
 
         tf1.setEditable(false);
         tf2.setEditable(false);
@@ -52,31 +54,34 @@ public class WaitingRoom implements ActionListener {
         tf3.setFont(new Font("TimesRoman", Font.BOLD, 30));
         tf4.setFont(new Font("TimesRoman", Font.BOLD, 30));
         tf5.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        btn.setFont(new Font("TimesRoman", Font.BOLD, 25));
-        
+        btn.setFont(new Font("TimesRoman", Font.BOLD, 23));
+        btn1.setFont(new Font("TimesRoman", Font.BOLD, 23));
+
         btn.setBackground(Color.white);
+        btn1.setBackground(Color.white);
         tf1.setBackground(Colors.lred);
         tf2.setBackground(Colors.lyellow);
         tf3.setBackground(Colors.lgreen);
         tf4.setBackground(Colors.lblue);
         tf5.setBackground(Colors.lviolet);
-        p2.setBackground(Color.white);
-        p3.setBackground(Color.white);
-        
+        p2.setBackground(Colors.lgrey);
+        p3.setBackground(Colors.lgrey);
+
         btn.setForeground(Colors.blue);
+        btn1.setForeground(Colors.blue);
         lb.setForeground(Colors.blue);
         tf5.setForeground(Color.white);
         tf4.setForeground(Color.white);
         tf3.setForeground(Color.white);
         tf2.setForeground(Color.white);
         tf1.setForeground(Color.white);
-        
+
         tf1.setBorder(null);
         tf2.setBorder(null);
         tf3.setBorder(null);
         tf4.setBorder(null);
         tf5.setBorder(null);
-        
+
         tf1.setHorizontalAlignment(JTextField.CENTER);
         tf2.setHorizontalAlignment(JTextField.CENTER);
         tf3.setHorizontalAlignment(JTextField.CENTER);
@@ -97,6 +102,7 @@ public class WaitingRoom implements ActionListener {
         p1.add(tf3);
         p1.add(tf4);
         p1.add(tf5);
+        p2.add(btn1);
         p2.add(btn);
         p3.add(lb);
 
@@ -120,16 +126,18 @@ public class WaitingRoom implements ActionListener {
             p1.setVisible(false);
             p2.setVisible(false);
             p3.setVisible(false);
-            
+
             try {
-				Game.startGame(this.fr);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+                Game.startGame(this.fr);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else if (ae.getSource().equals(btn1)){
+            System.exit(0);
         }
     }
 }

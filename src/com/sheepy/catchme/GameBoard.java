@@ -43,14 +43,20 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	private List<Player> players;
 	private List<Item> item;
 	private List<Projectile> projectiles;
+	private int selectedPlayer;
 	private GameState state;
 	private BufferedImage endingScene;
 
 	public GameBoard() throws InterruptedException, IOException {
+		this(0);
+	}
+
+	public GameBoard(int selectedPlayer) throws InterruptedException, IOException {
 		this.players = new ArrayList<Player>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
+		this.selectedPlayer = selectedPlayer;
 		GameBoard.tileMap = new TileMap(64, 64);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
@@ -94,7 +100,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void run() {
 		while (this.getGameState() == GameState.RUNNING) {
 			try {
-				Player p = this.players.get(0);
+				Player p = this.players.get(this.selectedPlayer);
 				Vector2D v = p.getVector();
 				double dx = 0, dy = 0;
 				if (this.pressed.contains(65)) {
@@ -152,9 +158,11 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 						this.players.remove(0);
 						winTeam = "Sheep";
 					} else {
-						Player p1 = this.players.get(0);
-						this.players.clear();
-						this.players.add(p1);
+						Player _w = this.players.get(0); // is it werewolf?
+						if (_w instanceof Werewolf) {
+							this.players.clear();
+							this.players.add(_w);
+						}
 						winTeam = "Werewolf";
 					}
 					eventObserver.onGameEnd(new GameEndEvent(this, winTeam, this.players));
@@ -179,7 +187,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		if (this.getGameState() == GameState.RUNNING) {
 
 			// Translate screen to player
-			g2d.translate(-this.players.get(1).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(1).getY() + Game.WINDOW_HEIGHT / 2);
+			g2d.translate(-this.players.get(this.selectedPlayer).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(this.selectedPlayer).getY() + Game.WINDOW_HEIGHT / 2);
 
 			// Clear screen
 			g.setColor(new Color(0, 0, 0)); // int r, int g, int b
@@ -234,7 +242,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				player.paint(g2d);
 			}
 
-			g2d.translate(this.players.get(1).getX() - Game.WINDOW_WIDTH / 2, this.players.get(1).getY() - Game.WINDOW_HEIGHT / 2);
+			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2, this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);
 
 			g2d.setColor(Color.BLACK);
 			g2d.setFont(new Font("Kanit", Font.PLAIN, 24));
@@ -258,7 +266,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		// Dash
 		// System.out.println(e.getKeyCode());
 		//		if (e.getKeyCode() == 16 && !pressed.contains(16)) {
-		//			this.players.get(0).getVector().multiply(2);
+		//			this.players.get(this.selectedPlayer).getVector().multiply(2);
 		//		}
 
 		pressed.add(e.getKeyCode());
@@ -281,24 +289,26 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void mousePressed(MouseEvent e) {
 		// is left click ?
 		// MouseEvent.BUTTON1 = left click
-		Player player = this.players.get(0);
-		if (e.getButton() == MouseEvent.BUTTON1 &&(timeTick - ballDelay >= 2000 || ballDelay == 0.0 || (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {           
-			double projSize = 18.0;
-			double centerX = Game.WINDOW_WIDTH / 2;
-			double centerY = Game.WINDOW_HEIGHT / 2;
+		Player player = this.players.get(this.selectedPlayer);
+		if (player instanceof Werewolf) {
+			if (e.getButton() == MouseEvent.BUTTON1 &&(timeTick - ballDelay >= 2000 || ballDelay == 0.0 || (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {           
+				double projSize = 18.0;
+				double centerX = Game.WINDOW_WIDTH / 2;
+				double centerY = Game.WINDOW_HEIGHT / 2;
 
-			Vector2D vect = new Vector2D();
-			System.out.println("x: " + e.getXOnScreen() + " " + e.getX());
-			System.out.println("y: " + e.getYOnScreen() + " " + e.getY());
-			vect.add((double) e.getX() - centerX, (double) e.getY() - centerY);
-			vect.normalize();
-			System.out.println(vect);
+				Vector2D vect = new Vector2D();
+				System.out.println("x: " + e.getXOnScreen() + " " + e.getX());
+				System.out.println("y: " + e.getYOnScreen() + " " + e.getY());
+				vect.add((double) e.getX() - centerX, (double) e.getY() - centerY);
+				vect.normalize();
+				System.out.println(vect);
 
-			double playerCenterX = player.getX() + player.getWidth() / 2;
-			double playerCenterY = player.getY() + player.getHeight() / 2;
-			Ball ball = new Ball(playerCenterX, playerCenterY, projSize, player, vect);
-			this.projectiles.add(ball);
-			ballDelay = timeTick;
+				double playerCenterX = player.getX() + player.getWidth() / 2;
+				double playerCenterY = player.getY() + player.getHeight() / 2;
+				Ball ball = new Ball(playerCenterX, playerCenterY, projSize, player, vect);
+				this.projectiles.add(ball);
+				ballDelay = timeTick;
+			}
 		}
 	}
 

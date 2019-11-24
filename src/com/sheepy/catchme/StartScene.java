@@ -74,8 +74,10 @@ public class StartScene extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(bn1)) {
-			new WaitingRoom(this.fr);
-		}
+                    new WaitingRoom(this.fr);
+		} if (e.getSource().equals(bn3)){
+                    new Howtoplay(this.fr);
+                }
 	}
 
 }

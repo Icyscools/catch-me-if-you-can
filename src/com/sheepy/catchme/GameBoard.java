@@ -33,7 +33,7 @@ import java.util.*;
 public class GameBoard extends JPanel implements KeyListener, MouseListener, WindowListener, GameListener, Runnable {
 
 	private static double timeTick;
-	private static double maximumTimeTick = 2 * 1000;
+	private static double maximumTimeTick = 90 * 1000;
 	private static double ballDelay;
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;

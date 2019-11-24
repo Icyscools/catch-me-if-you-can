@@ -2,7 +2,7 @@ package com.sheepy.catchme;
 
 import java.net.*;
 import java.security.MessageDigest;
-import javax.xml.bind.DatatypeConverter;
+//import javax.xml.bind.DatatypeConverter;
 import org.bson.Document;
 import java.io.*;
 import com.mongodb.client.MongoCollection;
@@ -45,7 +45,7 @@ public class ClientHandler extends Thread {
         		MessageDigest md = MessageDigest.getInstance("MD5");
         		md.update(password.getBytes());
         		byte[] digest = md.digest();
-        		password = DatatypeConverter.printHexBinary(digest).toLowerCase();
+//        		password = DatatypeConverter.printHexBinary(digest).toLowerCase();
         		userInfo.put("password", password); // Update user's password in Document
                 
                 if (document[0].equals("regis")) {

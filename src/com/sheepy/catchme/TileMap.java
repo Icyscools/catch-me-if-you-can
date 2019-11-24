@@ -2,6 +2,9 @@ package com.sheepy.catchme;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 import com.sheepy.catchme.util.Colors;
 
 public class TileMap {
@@ -9,17 +12,27 @@ public class TileMap {
 	private int mapTile[][];
 	private static int tileSize = 48;
 	private int width, height;
+	private BufferedImage[] tileImg;
 
 	public TileMap(int width, int height) {
 		this.width = width;
 		this.height = height;
 		mapTile = new int[height][width];
-		this.generateMap();
+		tileImg = new BufferedImage[2];
+		try {
+			SpriteSheet _sheet1 = new SpriteSheet("image/floor3.png", 1);
+			SpriteSheet _sheet2 = new SpriteSheet("image/floor1.png", 1);
+			this.tileImg[0] = _sheet1.getSprite();
+			this.tileImg[1] = _sheet2.getSprite();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.generateMap(0.2);
 	}
 
-	public void generateMap() {
+	public void generateMap(double bias) {
 		// Genearate Random noise map
-		double bias = 0.25;
 		int[][] cloneTile = new int[this.height][this.width];
 		for (int row = 1; row < height - 1; row++) {
 			for (int col = 1; col < width - 1; col++) {
@@ -175,21 +188,27 @@ public class TileMap {
 		for (int row = -1; row < this.height; row++) {
 			for (int col = -1; col < this.width; col++) {
 				if (row < 0 || col < 0) {
-					g.setColor(Colors.blue);
-					g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
+					g.drawImage(this.tileImg[0], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
+//					g.setColor(Colors.blue);
+//					g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
 				} else {
 					int tile = this.mapTile[row][col];
 					switch (tile) {
 					case 1:
+//						g.drawImage(this.tileImg[1], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
 						g.setColor(Colors.grass);
+						g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
 						break;
 					case 2:
+//						g.drawImage(this.tileImg[1], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
 						g.setColor(new Color(60, 0, 0));
+						g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
 						break;
 					default:
-						g.setColor(Colors.blue);
+						g.drawImage(this.tileImg[0], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
+//						g.setColor(Colors.blue);
 					}
-					g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
+//					g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
 				}
 			}
 		}

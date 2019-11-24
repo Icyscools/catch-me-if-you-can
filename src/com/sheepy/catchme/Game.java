@@ -37,6 +37,5 @@ public class Game {
 		frame.addWindowListener(game);
 		frame.setFocusable(true);
 		frame.requestFocus();
-		new Thread(game).start();
 	}
 }

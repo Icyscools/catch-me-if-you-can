@@ -102,7 +102,6 @@ public abstract class Player extends Entitys implements PickupItemListener, Play
 		}
 	}
 	
-
 	@Override
 	public void onPlayerStanding(PlayerStandingEvent event) {
 		if (event.getPlayer().equals(this)) {

@@ -5,11 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class EventObserver {
+	private List<GameListener> gameListeners = new ArrayList<GameListener>();
 	private List<PickupItemListener> pickUpItemListeners = new ArrayList<PickupItemListener>();
 	private List<BallHitListener> ballHitListener = new ArrayList<BallHitListener>();
 	private List<WerewolfDoDamageListener> werewolfDoDamageListener = new ArrayList<WerewolfDoDamageListener>();
 	private List<PlayerMoveListener> playerMoveListener = new ArrayList<PlayerMoveListener>();
-
+	
+	public void addGameListeners(GameListener listener) {
+		gameListeners.add(listener);
+	}
+	
 	public void addPickupListener(PickupItemListener listener) {
 		pickUpItemListeners.add(listener);
 	}
@@ -24,6 +29,38 @@ public class EventObserver {
 	
 	public void addPlayerMoveListener(PlayerMoveListener listener) {
 		playerMoveListener.add(listener);
+	}
+	
+	public void removeGameListeners(GameListener listener) {
+		gameListeners.remove(listener);
+	}
+	
+	public void removePickupListener(PickupItemListener listener) {
+		pickUpItemListeners.remove(listener);
+	}
+	
+	public void removeBallHitListener(BallHitListener listener) {
+		ballHitListener.remove(listener);
+	}
+	
+	public void removeWerewolfDoDamageListener(WerewolfDoDamageListener listener) {
+		werewolfDoDamageListener.remove(listener);
+	}
+	
+	public void removePlayerMoveListener(PlayerMoveListener listener) {
+		playerMoveListener.remove(listener);
+	}
+	
+	public void onGameStart(GameStartEvent event) {
+		for (GameListener listener : gameListeners) {
+			listener.onGameStart(event);
+		}
+	}
+	
+	public void onGameEnd(GameEndEvent event) {
+		for (GameListener listener : gameListeners) {
+			listener.onGameEnd(event);
+		}
 	}
 
 	public void onPickup(PickupItemEvent event) {

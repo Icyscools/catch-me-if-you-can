@@ -10,8 +10,10 @@ import com.sheepy.catchme.entitys.projectile.Ball;
 import com.sheepy.catchme.enums.GameState;
 import com.sheepy.catchme.events.BallHitEvent;
 import com.sheepy.catchme.events.EventObserver;
+import com.sheepy.catchme.events.GameEndEvent;
+import com.sheepy.catchme.events.GameListener;
+import com.sheepy.catchme.events.GameStartEvent;
 import com.sheepy.catchme.events.PickupItemEvent;
-import com.sheepy.catchme.events.PlayerMoveEvent;
 import com.sheepy.catchme.events.WerewolfDoDamageEvent;
 import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
@@ -26,7 +28,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 
-public class GameBoard extends JPanel implements KeyListener, MouseListener, WindowListener, Runnable {
+public class GameBoard extends JPanel implements KeyListener, MouseListener, WindowListener, GameListener, Runnable {
 
 	private static double timeTick;
 	private static double ballDelay;
@@ -79,6 +81,9 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.blue);
 		this.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		
+		eventObserver.addGameListeners(this);
+		eventObserver.onGameStart(new GameStartEvent(this));
 	}
 
 	@Override
@@ -86,7 +91,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		while (this.getGameState() == GameState.RUNNING) {
 			try {
 				Player p = this.players.get(1);
-				System.out.println(p.toString());
 				Vector2D v = p.getVector();
 				double dx = 0, dy = 0;
 				if (this.pressed.contains(65)) {
@@ -321,6 +325,20 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
+	}
+
+	@Override
+	public void onGameStart(GameStartEvent event) {
+		if (event.getGame().equals(this)) {
+			new Thread(event.getGame()).start();
+		}
+	}
+
+	@Override
+	public void onGameEnd(GameEndEvent event) {
+		if (event.getGame().equals(this)) {
+			
+		}
 	}
 
 }

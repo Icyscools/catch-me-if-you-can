@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 import org.bson.Document;
 
-public class LoginWindow implements ActionListener {
+public class Client implements ActionListener {
 	private JFrame fr;
 	private JPanel p0, p1, p2, p3, p4;
 	private JLabel instructionLb, ipLb, titleLb, userLb, passLb, status;
@@ -18,7 +18,7 @@ public class LoginWindow implements ActionListener {
 	private ObjectOutputStream toServer;	// Request to server
 	private ObjectInputStream fromServer;	// Response from server
 
-	public LoginWindow() {
+	public Client() {
 		fr = new JFrame("Catch me if you can - Client");
 		p0 = new JPanel();	// Title Label
 		p1 = new JPanel();	// Username / Instruction
@@ -129,9 +129,7 @@ public class LoginWindow implements ActionListener {
 			try {
 				status.setText("Connecting to Server....");
 				this.startConnection("127.0.0.1", 5555, "login");
-//				this.showLobby();
-//				Game.startGame(new JFrame("Catch me if you can - Game"));
-				new WaitingRoom().init();
+				new StartScene().init();
 			}
 			catch (Exception ex) {
 				status.setText(ex.toString());
@@ -198,6 +196,6 @@ public class LoginWindow implements ActionListener {
 	}
 	
 	public static void main(String[] args) {
-		new LoginWindow();
+		new Client();
 	}
 }

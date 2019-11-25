@@ -21,18 +21,18 @@ public class StartScene extends JPanel implements ActionListener {
     public StartScene() {
         this(Client.client.getJFrame());
     }
-    
+
     public StartScene(JFrame fr) {
         this.fr = fr;
         this.fr.setLayout(new BorderLayout());
         this.fr.getContentPane().removeAll();
-        
+
         p0 = new JPanel();
         p1 = new JPanel();
         p2 = new JPanel();
         p4 = new JPanel();
         lb = new JLabel();
-        
+
         this.setLayout(new GridLayout(3, 1));
         p0.setLayout(new BorderLayout());
         p1.setLayout(new FlowLayout());
@@ -43,7 +43,7 @@ public class StartScene extends JPanel implements ActionListener {
         p1.setOpaque(false);
         p2.setOpaque(false);
         p4.setOpaque(false);
-        
+
         bn1 = new JButton("Join Game");
         bn2 = new JButton("How To Play");
 
@@ -54,13 +54,12 @@ public class StartScene extends JPanel implements ActionListener {
         bn2.setBackground(Color.white);
         bn2.setForeground(Colors.blue);
 
-        
         bn1.setPreferredSize(new Dimension(160, 40));
         bn2.setPreferredSize(new Dimension(160, 40));
-       
+
         bn1.addActionListener(this);
         bn2.addActionListener(this);
-        
+
         bn1.setVisible(true);
         bn2.setVisible(true);
 
@@ -82,7 +81,7 @@ public class StartScene extends JPanel implements ActionListener {
         this.fr.repaint();
         System.out.println(Client.client.getAccount().toString());
     }
-    
+
     @Override
     public void paintComponent(Graphics g) {
         // paint ...
@@ -105,7 +104,7 @@ public class StartScene extends JPanel implements ActionListener {
             new WaitingRoom();
         }
         if (e.getSource().equals(bn2)) {
-        	new Howtoplay();
+            new Howtoplay();
         }
 
     }

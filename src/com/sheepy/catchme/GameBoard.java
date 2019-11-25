@@ -81,12 +81,22 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		}
 
 		// Spawn Item
-		Item _i = new Item(500, 500);
+		Item _wi = new Item();
+		_wi.setName(_wi.randomItem("Werewolf"));
+		String path = "image/item_"+_wi.getName()+".png";
 		pos = GameBoard.tileMap.getRandomGroundPosition();
-		_i.setX(pos[0]);
-		_i.setY(pos[1]);
-
-		this.item.add(_i);
+		_wi.setX(pos[0]);
+		_wi.setY(pos[1]);
+		_wi.setSpriteSheet(new SpriteSheet(path, 1));
+		this.item.add(_wi);
+		Item _si = new Item();
+		_si.setName(_si.randomItem("Sheep"));
+		pos = GameBoard.tileMap.getRandomGroundPosition();
+		_si.setX(pos[0]);
+		_si.setY(pos[1]);
+		_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
+		this.item.add(_si);
+		
 
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.blue);
@@ -139,7 +149,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				if (!p.getStatus().equals("None")){
 					if (p.getBuffDuration() - 1 == 0) {
 						p.setStatus("None");
-						System.out.println(timeTick % 1000);
+						p.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
 						System.out.println("Effect worn out");
 					}
 					else p.setBuffDuration(p.getBuffDuration() - 1);
@@ -230,8 +240,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				Item item = iterItem.next();
 				for (Player player : this.players) {
 					if (item.checkCollision(player.getHitbox())) {
-						eventObserver.onPickup(new PickupItemEvent(player, item));
-						iterItem.remove();
+						if((player instanceof Werewolf && !item.getName().equals("s1"))||(player instanceof Sheep && item.getName().equals("s1"))){
+							eventObserver.onPickup(new PickupItemEvent(player, item));
+							iterItem.remove();
+						}
 					}
 				}
 				item.paint(g2d);

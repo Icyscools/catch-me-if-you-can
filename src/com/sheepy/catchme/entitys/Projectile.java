@@ -23,7 +23,7 @@ public abstract class Projectile extends Entitys {
 	
 	public Projectile(double x, double y, double width, double height, Vector2D vect) {
 		super(x, y, width, height, vect);
-		this.velocity = 1.5;
+		this.velocity = 1.525;
 	}
 	
 	@Override

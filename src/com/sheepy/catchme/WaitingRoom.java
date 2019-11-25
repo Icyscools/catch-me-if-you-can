@@ -6,16 +6,20 @@
 package com.sheepy.catchme;
 
 import com.sheepy.catchme.util.Colors;
+
 import java.awt.*;
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.List;
 import java.awt.Color;
 
-public class WaitingRoom extends JPanel implements ActionListener {
+public class WaitingRoom extends JPanel implements ActionListener, Serializable {
 
 	private JFrame frame;
 	private JPanel p1, p2, p3;
@@ -23,23 +27,49 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	private JTextField tf1, tf2, tf3, tf4, tf5;
 	private JButton btn, btn1;
 	private String roomID;
-	private List<Client> clientConnected;
+	private Client client;
+	private ObjectInputStream fromServer;
+	private ObjectOutputStream toServer;
 
 	public WaitingRoom() {
-		this(Client.client.getJFrame(), "100");
+		this(Client.client.getJFrame(), Client.client);
 	}
 
 	public WaitingRoom(JFrame frame) {
-		this(frame, "100");
+		this(frame, Client.client);
 	}
 
-	public WaitingRoom(JFrame frame, String roomID) {
+	public WaitingRoom(JFrame frame, Client client) {
 		this.frame = frame;
-		this.roomID = roomID;
-		this.clientConnected = new ArrayList<Client>();
-		this.init();
-		if (Client.client.getAccount() != null) {
-			this.addPlayer(Client.client);
+		this.client = client;
+		try {
+			Client.client.startConnection("join", this);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							/* Create I/O Stream */
+							toServer = new ObjectOutputStream(Client.client.getSocket().getOutputStream());
+							fromServer = new ObjectInputStream(Client.client.getSocket().getInputStream());
+
+							/* Read message from Client */
+							Object[] document = (Object[]) fromServer.readObject();
+							if (document[0].equals("update-waiting-room")) {
+								System.out.println("update waiting room");
+								List<WaitingRoom> otherRoom = (List<WaitingRoom>) document[1];
+								updatePlayer(otherRoom);
+							}
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+							break;
+						}
+					}
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -147,24 +177,25 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		this.frame.revalidate();
 		this.frame.repaint();
 	}
-	
-	public void updateUI() {
-		switch (this.clientConnected.size()) {
+
+	public void updatePlayer(List<WaitingRoom> connectionPlayer) {
+		System.out.println(connectionPlayer);
+		switch (connectionPlayer.size()) {
 		case 5:
 			tf5.setBackground(Colors.lviolet);
-			tf5.setText("Wolf");
+			tf5.setText(connectionPlayer.get(4).getClient().getAccount().getUsername());
 		case 4:
 			tf4.setBackground(Colors.lblue);
-			tf4.setText("Sheep 4");
+			tf4.setText(connectionPlayer.get(3).getClient().getAccount().getUsername());
 		case 3:
 			tf3.setBackground(Colors.lgreen);
-			tf3.setText("Sheep 3");
+			tf3.setText(connectionPlayer.get(2).getClient().getAccount().getUsername());
 		case 2:
 			tf2.setBackground(Colors.lyellow);
-			tf2.setText("Sheep 2");
+			tf2.setText(connectionPlayer.get(1).getClient().getAccount().getUsername());
 		case 1:
 			tf1.setBackground(Colors.lred);
-			tf1.setText(Client.client.getAccount().getUsername());
+			tf1.setText(connectionPlayer.get(0).getClient().getAccount().getUsername());
 		default:
 			break;
 		}
@@ -172,29 +203,8 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		this.frame.repaint();
 	}
 
-	public void addPlayer(Client client) {
-		this.clientConnected.add(client);
-		this.updateUI();
-	}
-
-	public String getRoomID() {
-		return this.roomID;
-	}
-
-	public void setRoomID(String roomID) {
-		this.roomID = roomID;
-	}
-
-	public List<Client> getClient() {
-		return this.clientConnected;
-	}
-
-	public void addClient(Client client) {
-		this.clientConnected.add(client);
-	}
-
-	public void removeClient(Client client) {
-		this.clientConnected.remove(client);
+	public Client getClient() {
+		return this.client;
 	}
 
 	public Game startGame() {
@@ -209,7 +219,7 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new WaitingRoom();
+		new WaitingRoom(new JFrame());
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.sheepy.catchme;
 
 import java.net.*;
-import java.util.HashMap;
 import org.bson.Document;
 import java.io.*;
 import com.mongodb.*;
@@ -13,13 +12,13 @@ public class Server {
     private Socket clientSocket;
     private MongoClient mongo;
     public static int connectingClient = 0;
-    public static HashMap<String, WaitingRoom> lobbyList;
-    public static HashMap<String, Game> gameList;
+    public static Lobby lobby;
 
     /* Start Server */
     public void start(int port) throws Exception {
         /* Create server */
         serverSocket = new ServerSocket(port);
+        lobby = new Lobby();
         System.out.println("Server is running.");
 
         /* Connecting to MongoDB */
@@ -57,14 +56,6 @@ public class Server {
         clientSocket.close();
         serverSocket.close();
         mongo.close();
-    }
-    
-    public static void createRoom(String roomID) {
-    	lobbyList.put(roomID, new WaitingRoom());
-    }
-    
-    public static void createGame(String roomID) {
-    	WaitingRoom room = lobbyList.get(roomID);
     }
 
     public static void main(String[] args) throws Exception {

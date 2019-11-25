@@ -2,6 +2,9 @@ package com.sheepy.catchme;
 
 import java.net.*;
 import java.security.MessageDigest;
+import java.util.List;
+import java.util.Map;
+
 //import javax.xml.bind.DatatypeConverter;
 import org.bson.Document;
 import java.io.*;
@@ -25,6 +28,21 @@ public class ClientHandler extends Thread {
 
 	public int getConnectingClient() {
 		return Server.connectingClient;
+	}
+
+	public void updateWaitingRoom(List<WaitingRoom> rooms) {
+		try {
+			toClient = new ObjectOutputStream(clientSocket.getOutputStream());
+			fromClient = new ObjectInputStream(clientSocket.getInputStream());
+
+
+			Object[] document = new Object[2];
+			document[0] = "update-waiting-room";
+			document[1] = rooms;
+			toClient.writeObject("update-waiting-room");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -73,8 +91,11 @@ public class ClientHandler extends Thread {
 						break;
 					}
 				}
-				else if (document[0].equals("joingame")) {
-					Server.createRoom((String)document[1]);
+				else if (document[0].equals("join")) {
+					Server.lobby.addConnectionPlayer(this, (WaitingRoom) document[1]);
+					for (Map.Entry<ClientHandler, WaitingRoom> map : Server.lobby.getConnectionPlayer().entrySet()) {
+						map.getKey().updateWaitingRoom((List<WaitingRoom>) Server.lobby.getConnectionPlayer().values());
+					}
 				}
 			}
 			catch (Exception ex) {
@@ -87,5 +108,4 @@ public class ClientHandler extends Thread {
 		threadID--;
 		System.out.println(Server.connectingClient + " client(s) is/are connecting now.");
 	}
-
 }

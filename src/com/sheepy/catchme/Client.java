@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 import org.bson.Document;
 
-public class Client implements ActionListener {
+public class Client implements ActionListener, Serializable {
 	private JFrame frame;
 	private JPanel p0, p1, p2, p3, p4;
 	private JLabel instructionLb, ipLb, titleLb, userLb, passLb, status;
@@ -187,11 +187,10 @@ public class Client implements ActionListener {
 		Object[] document;
 		Object response = null;
 		switch (option) {
-		case "joingame":
-			String roomID = (String) object;
+		case "join":
 			document = new Object[2];
 			document[0] = option;
-			document[1] = roomID;
+			document[1] = object;
 			break;
 		default:
 			System.out.println("Option not found : " + option);
@@ -204,6 +203,7 @@ public class Client implements ActionListener {
 			fromServer = new ObjectInputStream(clientSocket.getInputStream());
 
 			/* Send Document to Server */
+			System.out.println(document[1].toString());
 			toServer.writeObject(document);
 			response = fromServer.readObject();
 			System.out.println(response.toString());
@@ -263,6 +263,10 @@ public class Client implements ActionListener {
 	
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+	
+	public Socket getSocket() {
+		return this.clientSocket;
 	}
 
 	public static void main(String[] args) {

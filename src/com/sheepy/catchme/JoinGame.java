@@ -30,7 +30,7 @@ public class JoinGame extends JPanel implements ActionListener {
 	private JLabel lb1, lb2;
 
 	public JoinGame() {
-		this(new JFrame(Game.TITLE));
+		this(Client.client.getJFrame());
 	}
 
 	public JoinGame(JFrame frame) {
@@ -112,7 +112,15 @@ public class JoinGame extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource().equals(btn1)) {
-			new WaitingRoom(this.fr);
+			try {
+				Object response = Client.client.startConnection("joingame", pass.getText());
+				if (response instanceof WaitingRoom) {
+					WaitingRoom waitingRoom = (WaitingRoom) response;
+					waitingRoom.addPlayer(Client.client);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		if (ae.getSource().equals(btn2)) {
 			new StartScene(this.fr);

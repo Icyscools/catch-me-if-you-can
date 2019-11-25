@@ -59,7 +59,7 @@ public class Game {
 	}
 	
 	public void startGame() throws InterruptedException, IOException {
-		this.startGame(this.getJFrame());
+		this.startGame(Client.client.getJFrame());
 	}
 	
 	public void startGame(JFrame frame) throws InterruptedException, IOException {

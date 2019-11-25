@@ -17,13 +17,13 @@ public class StartScene extends JPanel implements ActionListener {
     private JPanel p0;
 
     public StartScene() {
-        this(new JFrame(Game.TITLE));
+        this(Client.client.getJFrame());
     }
     
     public StartScene(JFrame fr) {
         this.fr = fr;
+        this.fr.setLayout(new BorderLayout());
         this.fr.getContentPane().removeAll();
-        this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         this.setLayout(new GridBagLayout());
         p0 = new JPanel();
@@ -52,11 +52,12 @@ public class StartScene extends JPanel implements ActionListener {
         this.fr.add(this);
         this.fr.pack();
         this.fr.setSize(640, 640);
+        this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.fr.setResizable(false);
         this.fr.setVisible(true);
         this.fr.revalidate();
         this.fr.repaint();
-        System.out.println(Client.account.toString());
+        System.out.println(Client.client.getAccount().toString());
     }
     
     @Override
@@ -82,13 +83,13 @@ public class StartScene extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(bn1)) {
-            new WaitingRoom(this.fr);
+            new WaitingRoom();
         }
         if (e.getSource().equals(bn2)) {
-        	new JoinGame(this.fr);
+        	new JoinGame();
         }
         if (e.getSource().equals(bn3)) {
-            new Howtoplay(this.fr);
+            new Howtoplay();
         }
     }
 

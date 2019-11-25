@@ -26,11 +26,11 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	private List<Client> clientConnected;
 
 	public WaitingRoom() {
-		this(new JFrame(Game.TITLE), "5050");
+		this(Client.client.getJFrame(), "100");
 	}
 
 	public WaitingRoom(JFrame frame) {
-		this(frame, "5050");
+		this(frame, "100");
 	}
 
 	public WaitingRoom(JFrame frame, String roomID) {
@@ -38,15 +38,9 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		this.roomID = roomID;
 		this.clientConnected = new ArrayList<Client>();
 		this.init();
-		System.out.println(this.clientConnected);
-		this.addPlayer(new Client());
-		System.out.println(this.clientConnected);
-		this.addPlayer(new Client());
-		System.out.println(this.clientConnected);
-		this.addPlayer(new Client());
-		System.out.println(this.clientConnected);
-		this.addPlayer(new Client());
-		System.out.println(this.clientConnected);
+		if (Client.client.getAccount() != null) {
+			this.addPlayer(Client.client);
+		}
 	}
 
 	public void init() {
@@ -89,11 +83,11 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		tf4.setBackground(Colors.lgrey);
 		tf5.setBackground(Colors.lgrey);
 
-		//		tf1.setBackground(Colors.lred);
-		//		tf2.setBackground(Colors.lyellow);
-		//		tf3.setBackground(Colors.lgreen);
-		//		tf4.setBackground(Colors.lblue);
-		//		tf5.setBackground(Colors.lviolet);
+		// tf1.setBackground(Colors.lred);
+		// tf2.setBackground(Colors.lyellow);
+		// tf3.setBackground(Colors.lgreen);
+		// tf4.setBackground(Colors.lblue);
+		// tf5.setBackground(Colors.lviolet);
 		p2.setBackground(Colors.lgrey);
 		p3.setBackground(Colors.lgrey);
 
@@ -118,11 +112,11 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		tf4.setHorizontalAlignment(JTextField.CENTER);
 		tf5.setHorizontalAlignment(JTextField.CENTER);
 
-		//		tf1.setText("Sheep 1");
-		//		tf2.setText("Sheep 2");
-		//		tf3.setText("Sheep 3");
-		//		tf4.setText("Sheep 4");
-		//		tf5.setText("Wolf");
+		// tf1.setText("Sheep 1");
+		// tf2.setText("Sheep 2");
+		// tf3.setText("Sheep 3");
+		// tf4.setText("Sheep 4");
+		// tf5.setText("Wolf");
 
 		this.frame.setLayout(new BorderLayout());
 		p1.setLayout(new GridLayout(1, 5));
@@ -153,9 +147,8 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		this.frame.revalidate();
 		this.frame.repaint();
 	}
-
-	public void addPlayer(Client client) {
-		this.clientConnected.add(client);
+	
+	public void updateUI() {
 		switch (this.clientConnected.size()) {
 		case 5:
 			tf5.setBackground(Colors.lviolet);
@@ -171,12 +164,17 @@ public class WaitingRoom extends JPanel implements ActionListener {
 			tf2.setText("Sheep 2");
 		case 1:
 			tf1.setBackground(Colors.lred);
-			tf1.setText("Sheep 1");
+			tf1.setText(Client.client.getAccount().getUsername());
 		default:
 			break;
 		}
 		this.frame.revalidate();
 		this.frame.repaint();
+	}
+
+	public void addPlayer(Client client) {
+		this.clientConnected.add(client);
+		this.updateUI();
 	}
 
 	public String getRoomID() {

@@ -25,7 +25,7 @@ public class Howtoplay extends JPanel implements ActionListener{
 	private JPanel p0;
 
 	public Howtoplay() {
-		this(new JFrame(Game.TITLE));
+		this(Client.client.getJFrame());
 	}
 	public Howtoplay(JFrame frame) {
 		this.fr = frame;

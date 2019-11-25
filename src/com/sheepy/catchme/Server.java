@@ -59,12 +59,12 @@ public class Server {
         mongo.close();
     }
     
-    public void createRoom(String roomID) {
-    	this.lobbyList.put(roomID, new WaitingRoom());
+    public static void createRoom(String roomID) {
+    	lobbyList.put(roomID, new WaitingRoom());
     }
     
-    public void createGame(String roomID) {
-    	WaitingRoom room = this.lobbyList.get(roomID);
+    public static void createGame(String roomID) {
+    	WaitingRoom room = lobbyList.get(roomID);
     }
 
     public static void main(String[] args) throws Exception {

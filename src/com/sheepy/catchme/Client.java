@@ -8,7 +8,7 @@ import java.net.*;
 import org.bson.Document;
 
 public class Client implements ActionListener {
-	private JFrame fr;
+	private JFrame frame;
 	private JPanel p0, p1, p2, p3, p4;
 	private JLabel instructionLb, ipLb, titleLb, userLb, passLb, status;
 	private JTextField ipTf, userTf;
@@ -17,10 +17,13 @@ public class Client implements ActionListener {
 	private Socket clientSocket;
 	private ObjectOutputStream toServer;	// Request to server
 	private ObjectInputStream fromServer;	// Response from server
-	public static Account account;
+	private Account account;
+	public static Client client;
+	public static String serverIp;
+	public static int serverPort = 5555;
 
 	public Client() {
-		fr = new JFrame(Game.TITLE + " - Client");
+		this.frame = new JFrame(Game.TITLE + " - Client");
 		p0 = new JPanel();	// Title Label
 		p1 = new JPanel();	// Username / Instruction
 		p2 = new JPanel();	// Password / Server's IP Address
@@ -54,18 +57,20 @@ public class Client implements ActionListener {
 
 		this.showConnectionPanel();
 
-		fr.add(new JPanel());
-		fr.add(p0);
-		fr.add(p1);
-		fr.add(p2);
-		fr.add(p3);
-		fr.add(p4);
+		this.frame.add(new JPanel());
+		this.frame.add(p0);
+		this.frame.add(p1);
+		this.frame.add(p2);
+		this.frame.add(p3);
+		this.frame.add(p4);
+
+		this.frame.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+		this.frame.setLayout(new GridLayout(8, 1));
+		this.frame.setResizable(false);
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setVisible(true);
 		
-		fr.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
-		fr.setLayout(new GridLayout(8, 1));
-		fr.setResizable(false);
-		fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		fr.setVisible(true);
+		client = this;
 	}
 
 	public void updatePanel() {
@@ -130,8 +135,19 @@ public class Client implements ActionListener {
 		else if (e.getSource().equals(loginBtn)) {
 			try {
 				status.setText("Connecting to Server....");
-				this.startConnection(ipTf.getText(), 5555, "login");
-				new StartScene();
+				Object response = this.startConnection(ipTf.getText(), 5555, "login");
+				if (response instanceof Account) {
+					System.out.println("login success");
+					status.setText("Login successful!");
+					this.account = (Account) response;
+					this.account.setClient(this);
+					serverIp = ipTf.getText();
+					serverPort = 5555;
+					new StartScene();
+				} else {
+					System.out.println("login fail");
+					status.setText((String) response);
+				}
 			}
 			catch (Exception ex) {
 				status.setText(ex.toString());
@@ -149,7 +165,8 @@ public class Client implements ActionListener {
 
 				else {
 					status.setText("Connecting to Server....");
-					this.startConnection(ipTf.getText(), 5555, "regis");
+					Object response = this.startConnection(ipTf.getText(), 5555, "regis");
+					System.out.println(response.toString());
 					this.stopConnection();
 				}
 			}
@@ -164,7 +181,38 @@ public class Client implements ActionListener {
 		clientSocket = new Socket(ip, port);
 	}
 
-	public void startConnection(String ip, int port, String option) throws UnknownHostException, IOException, ClassNotFoundException {
+	public Object startConnection(String option, Object object) throws UnknownHostException, IOException, ClassNotFoundException {
+		/* Connecting to Server Socket */
+		clientSocket = new Socket(serverIp, serverPort);
+		Object[] document;
+		Object response = null;
+		switch (option) {
+		case "joingame":
+			String roomID = (String) object;
+			document = new Object[2];
+			document[0] = option;
+			document[1] = roomID;
+			break;
+		default:
+			System.out.println("Option not found : " + option);
+			return null;
+		}
+
+		if (document != null) {
+			/* Create I/O Stream */
+			toServer = new ObjectOutputStream(clientSocket.getOutputStream());
+			fromServer = new ObjectInputStream(clientSocket.getInputStream());
+
+			/* Send Document to Server */
+			toServer.writeObject(document);
+			response = fromServer.readObject();
+			System.out.println(response.toString());
+		}
+		
+		return response != null ? response : null;
+	}
+
+	public Object startConnection(String ip, int port, String option) throws UnknownHostException, IOException, ClassNotFoundException {
 		/* Connecting to Server Socket */
 		clientSocket = new Socket(ip, port);
 		status.setText("Connected.");
@@ -192,15 +240,7 @@ public class Client implements ActionListener {
 		toServer.writeObject(documentArr);
 		Object response = fromServer.readObject();
 		System.out.println(response.toString());
-		if (response instanceof Account) {
-			System.out.println("login success");
-			status.setText("Login successful!");
-			Client.account = (Account) response;
-			new StartScene(this.fr);
-		} else {
-			System.out.println("login fail");
-			status.setText((String) response);
-		}
+		return response;
 	}
 
 	public void stopConnection() throws IOException {
@@ -208,16 +248,25 @@ public class Client implements ActionListener {
 		toServer.close();
 		fromServer.close();
 	}
+	
+	public JFrame getJFrame() {
+		return this.frame;
+	}
+	
+	public void setJFrame(JFrame frame) {
+		this.frame = frame;
+	}
 
 	public Account getAccount() {
 		return this.account;
 	}
-
-	public void setAccount(Account acct) {
-		this.account = acct;
+	
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 
 	public static void main(String[] args) {
 		new Client();
 	}
+
 }

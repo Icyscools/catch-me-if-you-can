@@ -16,6 +16,7 @@ import com.sheepy.catchme.events.GameListener;
 import com.sheepy.catchme.events.GameStartEvent;
 import com.sheepy.catchme.events.PickupItemEvent;
 import com.sheepy.catchme.events.WerewolfDoDamageEvent;
+import com.sheepy.catchme.sounds.Sound;
 import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
 
@@ -43,6 +44,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	private List<Player> players;
 	private List<Item> item;
 	private List<Projectile> projectiles;
+//	private Sound sound;
 	private int selectedPlayer;
 	private GameState state;
 	private BufferedImage endingScene;
@@ -55,12 +57,14 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.players = new ArrayList<Player>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
+//		this.sound = new Sound();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
+//		sound.play();
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");

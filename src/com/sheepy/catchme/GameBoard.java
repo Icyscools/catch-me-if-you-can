@@ -57,7 +57,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
-		GameBoard.tileMap = new TileMap(64, 64);
+		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
@@ -244,9 +244,9 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2, this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);
 
-			g2d.setColor(Color.BLACK);
-			g2d.setFont(new Font("Kanit", Font.PLAIN, 24));
-			g2d.drawString("" + (int)(90 - Math.ceil(GameBoard.timeTick / 1000)), (int)Game.WINDOW_WIDTH / 2, 30);
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(new Font("Kanit", Font.BOLD, 42));
+			g2d.drawString("" + (int)(90 - Math.ceil(GameBoard.timeTick / 1000)), (int)Game.WINDOW_WIDTH / 2, 50);
 		} else if (this.getGameState() == GameState.END) {
 			g.drawImage(endingScene, 0, 0, this.getWidth(), this.getHeight(), null);
 		}

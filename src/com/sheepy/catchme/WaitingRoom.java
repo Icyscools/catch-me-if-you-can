@@ -98,6 +98,7 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		fr.setLayout(new BorderLayout());
 		p1.setLayout(new GridLayout(1, 5));
 		p2.setLayout(new FlowLayout());
+		p3.setLayout(new FlowLayout());
 		p1.add(tf1);
 		p1.add(tf2);
 		p1.add(tf3);
@@ -107,14 +108,16 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		p2.add(btn1);
 		p3.add(lb);
 
-		this.add(p1, BorderLayout.CENTER);
+		this.setLayout(new BorderLayout());
 		this.add(p3, BorderLayout.NORTH);
+		this.add(p1, BorderLayout.CENTER);
 		this.add(p2, BorderLayout.SOUTH);
 		this.setSize(640, 640);
 		this.setVisible(true);
 
 		frame.getContentPane().removeAll();
 		frame.add(this);
+		frame.pack();
 		frame.setSize(640, 640);
 		frame.setResizable(false);
 		frame.setVisible(true);

@@ -18,12 +18,16 @@ public class TileMap {
 		this.width = width;
 		this.height = height;
 		mapTile = new int[height][width];
-		tileImg = new BufferedImage[2];
+		tileImg = new BufferedImage[4];
 		try {
 			SpriteSheet _sheet1 = new SpriteSheet("image/floor3.png", 1);
-			SpriteSheet _sheet2 = new SpriteSheet("image/floor1.png", 1);
+			SpriteSheet _sheet2 = new SpriteSheet("image/floor1-1.png", 1);
+			SpriteSheet _sheet3 = new SpriteSheet("image/floor1-2.png", 1);
+			SpriteSheet _sheet4 = new SpriteSheet("image/floor1-3.png", 1);
 			this.tileImg[0] = _sheet1.getSprite();
 			this.tileImg[1] = _sheet2.getSprite();
+			this.tileImg[2] = _sheet3.getSprite();
+			this.tileImg[3] = _sheet4.getSprite();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +41,7 @@ public class TileMap {
 		for (int row = 1; row < height - 1; row++) {
 			for (int col = 1; col < width - 1; col++) {
 				//cloneTile[row][col] = ThreadLocalRandom.current().nextInt(0, 1 + 1); // (min, max + 1)
-				cloneTile[row][col] = Math.random() < 0.5 + bias ? 1 : 0;
+				cloneTile[row][col] = Math.random() < 0.5 + bias ? (int)Math.rint(1 + (Math.random() * (3 - 1))) : 0;
 				this.mapTile[row][col] = cloneTile[row][col];
 			}
 		}
@@ -45,18 +49,18 @@ public class TileMap {
 		// Concat the area
 		for (int row = 3; row < height - 3; row++) {
 			for (int col = 3; col < width - 3; col++) {
-				if (cloneTile[row][col] == 1) {
-					if (cloneTile[row][col + 2] == 1) {
-						this.mapTile[row][col + 1] = 1;
+				if (cloneTile[row][col] >= 1) {
+					if (cloneTile[row][col + 2] >= 1) {
+						this.mapTile[row][col + 1] = (int)Math.rint(1 + (Math.random() * (3 - 1)));
 					}
-					if (cloneTile[row][col - 2] == 1) {
-						this.mapTile[row][col - 1] = 1;
+					if (cloneTile[row][col - 2] >= 1) {
+						this.mapTile[row][col - 1] = (int)Math.rint(1 + (Math.random() * (3 - 1)));
 					}
-					if (cloneTile[row + 2][col] == 1) {
-						this.mapTile[row + 1][col] = 1;
+					if (cloneTile[row + 2][col] >= 1) {
+						this.mapTile[row + 1][col] = (int)Math.rint(1 + (Math.random() * (3 - 1)));
 					}
-					if (cloneTile[row - 2][col] == 1) {
-						this.mapTile[row - 1][col] = 1;
+					if (cloneTile[row - 2][col] >= 1) {
+						this.mapTile[row - 1][col] = (int)Math.rint(1 + (Math.random() * (3 - 1)));
 					}
 				}
 			}
@@ -89,11 +93,11 @@ public class TileMap {
 		for (int row = 1; row < height - 2; row++) {
 			for (int col = 1; col < width - 2; col++) {
 				if (this.mapTile[row][col] == 0) {
-					if (this.mapTile[row][col + 1] == 1 &&
-							this.mapTile[row][col - 1] == 1 &&
-							this.mapTile[row + 1][col] == 1 &&
-							this.mapTile[row - 1][col] == 1) {
-						this.mapTile[row][col] = 1;
+					if (this.mapTile[row][col + 1] >= 1 &&
+							this.mapTile[row][col - 1] >= 1 &&
+							this.mapTile[row + 1][col] >= 1 &&
+							this.mapTile[row - 1][col] >= 1) {
+						this.mapTile[row][col] = (int)Math.rint(1 + (Math.random() * (3 - 1)));
 					}
 				}
 			}
@@ -123,7 +127,7 @@ public class TileMap {
 			return mask.clone();
 		} else {
 			int tile = map[row][col];
-			if (tile == 1 || tile == 2) {
+			if (tile > 0) {
 				mask[row][col] = tile;
 				mask = this.observeGo(row + 1, col, map, mask.clone(), true);
 				mask = this.observeGo(row - 1, col, map, mask.clone(), true);
@@ -195,16 +199,17 @@ public class TileMap {
 					int tile = this.mapTile[row][col];
 					switch (tile) {
 					case 1:
-//						g.drawImage(this.tileImg[1], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
-						g.setColor(Colors.grass);
-						g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
+						g.drawImage(this.tileImg[1], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
+//						g.setColor(Colors.grass);
+//						g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
 						break;
 					case 2:
-//						g.drawImage(this.tileImg[1], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
-						g.setColor(new Color(60, 0, 0));
-						g.fillRect(col * tileSize, row * tileSize, tileSize + 1, tileSize + 1);
+						g.drawImage(this.tileImg[2], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
 						break;
-					default:
+					case 3:
+						g.drawImage(this.tileImg[3], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
+						break;
+					default:	
 						g.drawImage(this.tileImg[0], col * tileSize, row * tileSize, tileSize + 1, tileSize + 1, null);
 //						g.setColor(Colors.blue);
 					}

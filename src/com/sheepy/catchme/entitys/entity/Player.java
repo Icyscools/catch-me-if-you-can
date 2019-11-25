@@ -19,7 +19,7 @@ public abstract class Player extends Entitys implements PickupItemListener, Play
 	private String name;
 	protected SpriteSheet sheet;
 	private String status = "None";
-	private int buffDuration = 200;
+	private int buffDuration = 400;
 
 	public Player() {
 		this(0, 0, 25.0, 25.0, "tester");

@@ -115,28 +115,28 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				double dx = 0, dy = 0;
 				if (this.pressed.contains(65)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dx -= 7.5;
+						dx -= 6;
 					} else {
 						dx -= 5;
 					}
 				}
 				if (this.pressed.contains(68)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dx += 7.5;
+						dx += 6;
 					} else {
 						dx += 5;
 					}
 				}
 				if (this.pressed.contains(87)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dy -= 7.5;
+						dy -= 6;
 					} else {
 						dy -= 5;
 					}
 				}
 				if (this.pressed.contains(83)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dy += 7.5;
+						dy += 6;
 					} else {
 						dy += 5;
 					}
@@ -149,10 +149,32 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				if (!p.getStatus().equals("None")){
 					if (p.getBuffDuration() - 1 == 0) {
 						p.setStatus("None");
-						p.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+						if (p instanceof Werewolf) {
+							p.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+						}
+						p.setBuffDuration(400);
 						System.out.println("Effect worn out");
 					}
 					else p.setBuffDuration(p.getBuffDuration() - 1);
+				}
+				
+				if (timeTick % (Game.TICK*40*15) == 0) {
+					this.item.clear();
+					Item _wi = new Item();
+					_wi.setName(_wi.randomItem("Werewolf"));
+					String path = "image/item_"+_wi.getName()+".png";
+					int[] pos = GameBoard.tileMap.getRandomGroundPosition();
+					_wi.setX(pos[0]);
+					_wi.setY(pos[1]);
+					_wi.setSpriteSheet(new SpriteSheet(path, 1));
+					this.item.add(_wi);
+					Item _si = new Item();
+					_si.setName(_si.randomItem("Sheep"));
+					pos = GameBoard.tileMap.getRandomGroundPosition();
+					_si.setX(pos[0]);
+					_si.setY(pos[1]);
+					_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
+					this.item.add(_si);
 				}
 
 				v.setX(dx);
@@ -192,10 +214,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 					Item item = iterItem.next();
 					for (Player player : this.players) {
 						if (item.checkCollision(player.getHitbox())) {
-							eventObserver.onPickup(new PickupItemEvent(player, item));
-							System.out.println(player + " " + item.getName());
-							iterItem.remove();
-							break;
+							if ((player instanceof Werewolf&&!item.getName().equals("s1"))||(player instanceof Sheep&&item.getName().equals("s1"))) {
+								eventObserver.onPickup(new PickupItemEvent(player, item));
+								System.out.println(player + " " + item.getName());
+								iterItem.remove();
+								break;
+							}
 						}
 					}
 				}

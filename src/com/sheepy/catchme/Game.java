@@ -20,7 +20,7 @@ public class Game {
 	public static String TITLE = "Sheepy VS Werewolf";
 	public JFrame frame;
 	private GameBoard gameBoard;
-	private int roomID;
+	private String roomID;
 	private List<Client> clientConnected;
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
@@ -29,14 +29,14 @@ public class Game {
 	}
 	
 	public Game() {
-		this(new JFrame(Game.TITLE), 100, new ArrayList<Client>());
+		this(new JFrame(Game.TITLE), "5050", new ArrayList<Client>());
 	}
 	
-	public Game(JFrame frame, int roomID) {
+	public Game(JFrame frame, String roomID) {
 		this(frame, roomID, new ArrayList<Client>());
 	}
 
-	public Game(JFrame frame, int roomID, List<Client> clients) {
+	public Game(JFrame frame, String roomID, List<Client> clients) {
 		this.frame = frame;
 		this.roomID = roomID;
 		this.clientConnected = clients;
@@ -50,11 +50,11 @@ public class Game {
 		this.frame = frame;
 	}
 	
-	public int getRoomID() {
+	public String getRoomID() {
 		return this.roomID;
 	}
 	
-	public void setRoomID(int roomID) {
+	public void setRoomID(String roomID) {
 		this.roomID = roomID;
 	}
 	
@@ -77,4 +77,12 @@ public class Game {
 		frame.setFocusable(true);
 		frame.requestFocus();
 	}
+
+    static void WaitingRoom(JFrame fr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    static void StartScene(JFrame fr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

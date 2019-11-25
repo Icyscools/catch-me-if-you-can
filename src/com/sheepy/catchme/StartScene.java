@@ -1,5 +1,6 @@
 package com.sheepy.catchme;
 
+import com.sheepy.catchme.util.Colors;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,13 @@ public class StartScene extends JPanel implements ActionListener {
         bn1.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn3.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        bn1.setBackground(Color.white);
+        bn1.setForeground(Colors.blue);
+        bn2.setBackground(Color.white);
+        bn2.setForeground(Colors.blue);
+        bn3.setBackground(Color.white);
+        bn3.setForeground(Colors.blue);
+
 
         bn1.addActionListener(this);
         bn2.addActionListener(this);

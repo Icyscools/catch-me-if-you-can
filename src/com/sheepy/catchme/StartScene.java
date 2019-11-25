@@ -14,8 +14,8 @@ public class StartScene extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JFrame fr;
-    private JButton bn1, bn2, bn3;
-    private JPanel p0, p1, p2, p3, p4;
+    private JButton bn1, bn2;
+    private JPanel p0, p1, p2, p4;
     private JLabel lb;
 
     public StartScene() {
@@ -30,7 +30,6 @@ public class StartScene extends JPanel implements ActionListener {
         p0 = new JPanel();
         p1 = new JPanel();
         p2 = new JPanel();
-        p3 = new JPanel();
         p4 = new JPanel();
         lb = new JLabel();
         
@@ -44,41 +43,32 @@ public class StartScene extends JPanel implements ActionListener {
         p0.setOpaque(false);
         p1.setOpaque(false);
         p2.setOpaque(false);
-        p3.setOpaque(false);
         p4.setOpaque(false);
         
         bn1 = new JButton("New Game");
-        bn2 = new JButton("Join Game");
-        bn3 = new JButton("How To Play");
+        bn2 = new JButton("How To Play");
 
         bn1.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
-        bn3.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn1.setBackground(Color.white);
         bn1.setForeground(Colors.blue);
         bn2.setBackground(Color.white);
         bn2.setForeground(Colors.blue);
-        bn3.setBackground(Color.white);
-        bn3.setForeground(Colors.blue);
+
         
         bn1.setPreferredSize(new Dimension(160, 40));
         bn2.setPreferredSize(new Dimension(160, 40));
-        bn3.setPreferredSize(new Dimension(160, 40));
        
         bn1.addActionListener(this);
         bn2.addActionListener(this);
-        bn3.addActionListener(this);
         
         bn1.setVisible(true);
         bn2.setVisible(true);
-        bn3.setVisible(true);
 
         p1.add(bn1);
         p2.add(bn2);
-        p3.add(bn3);
         p4.add(p1);
         p4.add(p2);
-        p4.add(p3);
         p0.add(p4, BorderLayout.SOUTH);
 
         this.add(lb);
@@ -116,11 +106,9 @@ public class StartScene extends JPanel implements ActionListener {
             new WaitingRoom();
         }
         if (e.getSource().equals(bn2)) {
-        	new JoinGame();
+        	new Howtoplay();
         }
-        if (e.getSource().equals(bn3)) {
-            new Howtoplay();
-        }
+
     }
 
 }

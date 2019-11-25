@@ -37,7 +37,6 @@ public class StartScene extends JPanel implements ActionListener {
         p0.setLayout(new BorderLayout());
         p1.setLayout(new FlowLayout());
         p2.setLayout(new FlowLayout());
-        p3.setLayout(new FlowLayout());
         p4.setLayout(new GridLayout(3, 1));
 
         p0.setOpaque(false);
@@ -45,7 +44,7 @@ public class StartScene extends JPanel implements ActionListener {
         p2.setOpaque(false);
         p4.setOpaque(false);
         
-        bn1 = new JButton("New Game");
+        bn1 = new JButton("Join Game");
         bn2 = new JButton("How To Play");
 
         bn1.setFont(new Font("TimesRoman", Font.BOLD, 20));

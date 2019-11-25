@@ -127,8 +127,9 @@ public class Client implements ActionListener, Serializable {
 				this.tryConnection(ipTf.getText(), 5555);
 				this.showLogin();
 				this.stopConnection();
+				status.setText("Connected.");
 			}
-			catch (Exception ex) {
+			catch (IOException ex) {
 				status.setText("Connection failed.");
 			}
 		}
@@ -179,6 +180,7 @@ public class Client implements ActionListener, Serializable {
 	public void tryConnection(String ip, int port) throws UnknownHostException, IOException {
 		/* Try to connect to Server */
 		clientSocket = new Socket(ip, port);
+		status.setText("Connected.");
 	}
 
 	public Object startConnection(String option, Object object) throws UnknownHostException, IOException, ClassNotFoundException {

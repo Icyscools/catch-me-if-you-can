@@ -423,7 +423,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				} else {
 					endingScene = ImageIO.read(getClass().getResource("image/Sheep-win.png"));
 				}
-				this.repaint();
+                                new WinnerScene(Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

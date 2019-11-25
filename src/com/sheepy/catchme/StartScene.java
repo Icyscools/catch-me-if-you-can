@@ -60,8 +60,11 @@ public class StartScene extends JPanel implements ActionListener {
         bn2.setForeground(Colors.blue);
         bn3.setBackground(Color.white);
         bn3.setForeground(Colors.blue);
-
-
+        
+        bn1.setPreferredSize(new Dimension(160, 40));
+        bn2.setPreferredSize(new Dimension(160, 40));
+        bn3.setPreferredSize(new Dimension(160, 40));
+       
         bn1.addActionListener(this);
         bn2.addActionListener(this);
         bn3.addActionListener(this);

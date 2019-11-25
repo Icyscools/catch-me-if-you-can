@@ -66,7 +66,7 @@ public class ClientHandler extends Thread {
                 	if (collection.find(and(
                 			eq("username", username),
                 			eq("password", password))).first() != null) {
-                		toClient.writeObject("Logged in.");
+                		toClient.writeObject(new Account(username));
                 	}
                 	else {
                 		toClient.writeObject("Username or Password are incorrect.");

@@ -16,7 +16,7 @@ public class StartScene extends JPanel implements ActionListener {
     private JButton bn1, bn2, bn3;
     private JPanel p0;
 
-    public StartScene(){
+    public StartScene() {
         this(new JFrame(Game.TITLE));
     }
     
@@ -24,7 +24,7 @@ public class StartScene extends JPanel implements ActionListener {
         this.fr = fr;
         this.fr.getContentPane().removeAll();
         this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        
         this.setLayout(new GridBagLayout());
         p0 = new JPanel();
         GridLayout grid = new GridLayout(3, 1);
@@ -56,6 +56,7 @@ public class StartScene extends JPanel implements ActionListener {
         this.fr.setVisible(true);
         this.fr.revalidate();
         this.fr.repaint();
+        System.out.println(Client.account.toString());
     }
     
     @Override

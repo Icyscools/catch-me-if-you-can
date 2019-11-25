@@ -19,13 +19,13 @@ public class Client implements ActionListener {
 	private ObjectInputStream fromServer;	// Response from server
 
 	public Client() {
-		fr = new JFrame("Catch me if you can - Client");
+		fr = new JFrame(Game.TITLE + " - Client");
 		p0 = new JPanel();	// Title Label
 		p1 = new JPanel();	// Username / Instruction
 		p2 = new JPanel();	// Password / Server's IP Address
 		p3 = new JPanel();	// Button
 		p4 = new JPanel();	// Status
-		titleLb = new JLabel("Catch me if you can");
+		titleLb = new JLabel(Game.TITLE);
 		instructionLb = new JLabel("Enter Server's IP Address to continue");
 		ipLb = new JLabel("Server IP: ");
 		userLb = new JLabel("Username: ");

@@ -11,23 +11,33 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Color;
 
 public class WaitingRoom extends JPanel implements ActionListener {
 
-	private JFrame fr;
+	private JFrame frame;
 	private JPanel p1, p2, p3;
 	private JLabel lb;
 	private JTextField tf1, tf2, tf3, tf4, tf5;
 	private JButton btn, btn1;
-
+	private int roomID;
+	private List<Client> clientConnected;
 
 	public WaitingRoom() {
-		this(new JFrame(Game.TITLE));
+		this(new JFrame(Game.TITLE), 100);
 	}
-	
-	public WaitingRoom(JFrame frame) {
-		this.fr = frame;
+
+	public WaitingRoom(JFrame frame, int roomID) {
+		this.frame = frame;
+		this.roomID = roomID;
+		this.clientConnected = new ArrayList<Client>();
+		this.init();
+//		this.addPlayer(new Client());
+	}
+
+	public void init() {
 		p1 = new JPanel();
 		p2 = new JPanel();
 		p3 = new JPanel();
@@ -60,11 +70,18 @@ public class WaitingRoom extends JPanel implements ActionListener {
 
 		btn.setBackground(Color.white);
 		btn1.setBackground(Color.white);
-		tf1.setBackground(Colors.lred);
-		tf2.setBackground(Colors.lyellow);
-		tf3.setBackground(Colors.lgreen);
-		tf4.setBackground(Colors.lblue);
-		tf5.setBackground(Colors.lviolet);
+
+		tf1.setBackground(Colors.lgrey);
+		tf2.setBackground(Colors.lgrey);
+		tf3.setBackground(Colors.lgrey);
+		tf4.setBackground(Colors.lgrey);
+		tf5.setBackground(Colors.lgrey);
+		
+//		tf1.setBackground(Colors.lred);
+//		tf2.setBackground(Colors.lyellow);
+//		tf3.setBackground(Colors.lgreen);
+//		tf4.setBackground(Colors.lblue);
+//		tf5.setBackground(Colors.lviolet);
 		p2.setBackground(Colors.lgrey);
 		p3.setBackground(Colors.lgrey);
 
@@ -89,13 +106,13 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		tf4.setHorizontalAlignment(JTextField.CENTER);
 		tf5.setHorizontalAlignment(JTextField.CENTER);
 
-		tf1.setText("Sheep 1");
-		tf2.setText("Sheep 2");
-		tf3.setText("Sheep 3");
-		tf4.setText("Sheep 4");
-		tf5.setText("Wolf");
+//		tf1.setText("Sheep 1");
+//		tf2.setText("Sheep 2");
+//		tf3.setText("Sheep 3");
+//		tf4.setText("Sheep 4");
+//		tf5.setText("Wolf");
 
-		fr.setLayout(new BorderLayout());
+		this.frame.setLayout(new BorderLayout());
 		p1.setLayout(new GridLayout(1, 5));
 		p2.setLayout(new FlowLayout());
 		p3.setLayout(new FlowLayout());
@@ -115,23 +132,44 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		this.setSize(640, 640);
 		this.setVisible(true);
 
-		frame.getContentPane().removeAll();
-		frame.add(this);
-		frame.pack();
-		frame.setSize(640, 640);
-		frame.setResizable(false);
-		frame.setVisible(true);
-		frame.revalidate();
-		frame.repaint();
+		this.frame.getContentPane().removeAll();
+		this.frame.add(this);
+		this.frame.pack();
+		this.frame.setSize(640, 640);
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
+		this.frame.revalidate();
+		this.frame.repaint();
+	}
+
+	public void addPlayer(Client client) {
+		this.clientConnected.add(client);
+		switch (this.clientConnected.size()) {
+		case 1:
+			tf1.setBackground(Colors.lred);
+			tf1.setText("Sheep 1");
+		case 2:
+			tf2.setBackground(Colors.lyellow);
+			tf2.setText("Sheep 2");
+		case 3:
+			tf3.setBackground(Colors.lgreen);
+			tf3.setText("Sheep 3");
+		case 4:
+			tf4.setBackground(Colors.lblue);
+			tf4.setText("Sheep 4");
+		case 5:
+			tf5.setBackground(Colors.lviolet);
+			tf5.setText("Wolf");
+		default:
+			break;
+		}
+		this.frame.revalidate();
+		this.frame.repaint();
 	}
 
 	public static void main(String[] args) {
 		new WaitingRoom();
 	}
-
-	//    public void addPlayer(Client) {
-	//    	
-	//    }
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -141,7 +179,8 @@ public class WaitingRoom extends JPanel implements ActionListener {
 			p3.setVisible(false);
 
 			try {
-				Game.startGame(this.fr);
+				Game game = new Game(this.frame, this.roomID);
+				game.startGame();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -10,73 +10,73 @@ import com.sheepy.catchme.util.Vector2D;
 
 public class Item extends Entitys {
 
-    private int respawnTime;
-    private String name;
+	private int respawnTime;
+	private String name;
 
-    public Item() {
-        this(0, 0, 20.0, 20.0, 10, "Tester Item");
-    }
+	public Item() {
+		this(0, 0, 20.0, 20.0, 10, "Tester Item");
+	}
 
-    public Item(int x, int y) {
-        this(x, y, 20.0, 20.0, 10, "Tester Item");
-    }
+	public Item(int x, int y) {
+		this(x, y, 20.0, 20.0, 10, "Tester Item");
+	}
 
-    public Item(String name) {
-        this(0, 0, 20.0, 20.0, 10, name);
-    }
+	public Item(String name) {
+		this(0, 0, 20.0, 20.0, 10, name);
+	}
 
-    public Item(int x, int y, double width, double height, int respawnTime, String name) {
-        super(x, y, width, height, new Vector2D(0, 0));
-        this.respawnTime = respawnTime;
-        this.name = name;
-    }
+	public Item(int x, int y, double width, double height, int respawnTime, String name) {
+		super(x, y, width, height, new Vector2D(0, 0));
+		this.respawnTime = respawnTime;
+		this.name = name;
+	}
 
-    public int getRespawnTime() {
-        return respawnTime;
-    }
+	public int getRespawnTime() {
+		return respawnTime;
+	}
 
-    public void setRespawnTime(int respawnTime) {
-        this.respawnTime = respawnTime;
-    }
+	public void setRespawnTime(int respawnTime) {
+		this.respawnTime = respawnTime;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void paint(Graphics2D g) {
-        g.setColor(new Color(255,127,80)); // int r, int g, int b
-        g.fillRect((int) this.getX(), (int) this.getY(), (int) this.getWidth(), (int) this.getHeight());
-    }
+	public void paint(Graphics2D g) {
+		g.setColor(new Color(255,127,80)); // int r, int g, int b
+		g.fillRect((int) this.getX(), (int) this.getY(), (int) this.getWidth(), (int) this.getHeight());
+	}
 
-    public Shape getHitbox() {
-        return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-    }
-    
-    public void buff(Player p){
-    	int random = p instanceof Werewolf?(int) (Math.random() * 3): (int) (Math.random() * 3)+2;
-    	System.out.println(random);
-    	switch (random) {
+	public Shape getHitbox() {
+		return new Rectangle2D.Double(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+	}
+
+	public void buff(Player p){
+		int random = p instanceof Werewolf ? (int) (Math.random() * 3): (int) (Math.random() * 3)+2;
+		System.out.println(random);
+		switch (random) {
 		case 1:
 			p.setStatus("Transform");
 			System.out.println("Transform");
+			break;
 		case 2:
 			p.setStatus("Fast Reload");
 			System.out.println("Fast Reload");
 			break;
-//		case 3:
-//			//Sheep Item
-//			break;
-//		case 4:
-//			//Sheep Item
-//			break;
+			//			case 3:
+			//				//Sheep Item
+			//				break;
+			//			case 4:
+			//				//Sheep Item
+			//				break;
 		default:
 			p.setStatus("Speed Boost");
 			System.out.println("Speed Boost");
 			break;
 		}
-    }
-}
+	}

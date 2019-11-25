@@ -64,7 +64,9 @@ public class Ball extends Projectile implements BallHitListener {
 
 	@Override
 	public void onBallHit(BallHitEvent event) {
-		System.out.println(event.toString());
+		if (event.getBall().equals(this)) {
+			System.out.println(event.toString());
+		}
 	}
 
 }

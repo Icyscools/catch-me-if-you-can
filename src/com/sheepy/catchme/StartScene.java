@@ -73,7 +73,7 @@ public class StartScene extends JPanel implements ActionListener {
             e.printStackTrace();
         }
     }
-
+    
     public static void main(String[] args) {
         new StartScene();
     }
@@ -82,6 +82,9 @@ public class StartScene extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(bn1)) {
             new WaitingRoom(this.fr);
+        }
+        if (e.getSource().equals(bn2)) {
+        	new JoinGame(this.fr);
         }
         if (e.getSource().equals(bn3)) {
             new Howtoplay(this.fr);

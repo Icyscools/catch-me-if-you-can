@@ -96,7 +96,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		_si.setY(pos[1]);
 		_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
 		this.item.add(_si);
-		
+
 
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.lightblue);
@@ -251,11 +251,11 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 			for (Projectile _proj : this.projectiles) {
 				_proj.paint(g2d);
 			}
-			
+
 			for (Item _item : this.item) {
 				_item.paint(g2d);
 			}
-			
+
 			for (Player _player : this.players) {
 				_player.paint(g2d);
 			}

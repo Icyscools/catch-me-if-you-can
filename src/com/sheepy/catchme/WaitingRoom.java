@@ -22,23 +22,31 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	private JLabel lb;
 	private JTextField tf1, tf2, tf3, tf4, tf5;
 	private JButton btn, btn1;
-	private int roomID;
+	private String roomID;
 	private List<Client> clientConnected;
 
 	public WaitingRoom() {
-		this(new JFrame(Game.TITLE), 100);
-	}
-        
-        public WaitingRoom(JFrame frame) {
-            this(frame, 100);
+		this(new JFrame(Game.TITLE), "5050");
 	}
 
-	public WaitingRoom(JFrame frame, int roomID) {
+	public WaitingRoom(JFrame frame) {
+		this(frame, "5050");
+	}
+
+	public WaitingRoom(JFrame frame, String roomID) {
 		this.frame = frame;
 		this.roomID = roomID;
 		this.clientConnected = new ArrayList<Client>();
 		this.init();
-//		this.addPlayer(new Client());
+		System.out.println(this.clientConnected);
+		this.addPlayer(new Client());
+		System.out.println(this.clientConnected);
+		this.addPlayer(new Client());
+		System.out.println(this.clientConnected);
+		this.addPlayer(new Client());
+		System.out.println(this.clientConnected);
+		this.addPlayer(new Client());
+		System.out.println(this.clientConnected);
 	}
 
 	public void init() {
@@ -80,12 +88,12 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		tf3.setBackground(Colors.lgrey);
 		tf4.setBackground(Colors.lgrey);
 		tf5.setBackground(Colors.lgrey);
-		
-//		tf1.setBackground(Colors.lred);
-//		tf2.setBackground(Colors.lyellow);
-//		tf3.setBackground(Colors.lgreen);
-//		tf4.setBackground(Colors.lblue);
-//		tf5.setBackground(Colors.lviolet);
+
+		//		tf1.setBackground(Colors.lred);
+		//		tf2.setBackground(Colors.lyellow);
+		//		tf3.setBackground(Colors.lgreen);
+		//		tf4.setBackground(Colors.lblue);
+		//		tf5.setBackground(Colors.lviolet);
 		p2.setBackground(Colors.lgrey);
 		p3.setBackground(Colors.lgrey);
 
@@ -110,11 +118,11 @@ public class WaitingRoom extends JPanel implements ActionListener {
 		tf4.setHorizontalAlignment(JTextField.CENTER);
 		tf5.setHorizontalAlignment(JTextField.CENTER);
 
-//		tf1.setText("Sheep 1");
-//		tf2.setText("Sheep 2");
-//		tf3.setText("Sheep 3");
-//		tf4.setText("Sheep 4");
-//		tf5.setText("Wolf");
+		//		tf1.setText("Sheep 1");
+		//		tf2.setText("Sheep 2");
+		//		tf3.setText("Sheep 3");
+		//		tf4.setText("Sheep 4");
+		//		tf5.setText("Wolf");
 
 		this.frame.setLayout(new BorderLayout());
 		p1.setLayout(new GridLayout(1, 5));
@@ -149,26 +157,57 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	public void addPlayer(Client client) {
 		this.clientConnected.add(client);
 		switch (this.clientConnected.size()) {
-		case 1:
-			tf1.setBackground(Colors.lred);
-			tf1.setText("Sheep 1");
-		case 2:
-			tf2.setBackground(Colors.lyellow);
-			tf2.setText("Sheep 2");
-		case 3:
-			tf3.setBackground(Colors.lgreen);
-			tf3.setText("Sheep 3");
-		case 4:
-			tf4.setBackground(Colors.lblue);
-			tf4.setText("Sheep 4");
 		case 5:
 			tf5.setBackground(Colors.lviolet);
 			tf5.setText("Wolf");
+		case 4:
+			tf4.setBackground(Colors.lblue);
+			tf4.setText("Sheep 4");
+		case 3:
+			tf3.setBackground(Colors.lgreen);
+			tf3.setText("Sheep 3");
+		case 2:
+			tf2.setBackground(Colors.lyellow);
+			tf2.setText("Sheep 2");
+		case 1:
+			tf1.setBackground(Colors.lred);
+			tf1.setText("Sheep 1");
 		default:
 			break;
 		}
 		this.frame.revalidate();
 		this.frame.repaint();
+	}
+
+	public String getRoomID() {
+		return this.roomID;
+	}
+
+	public void setRoomID(String roomID) {
+		this.roomID = roomID;
+	}
+
+	public List<Client> getClient() {
+		return this.clientConnected;
+	}
+
+	public void addClient(Client client) {
+		this.clientConnected.add(client);
+	}
+
+	public void removeClient(Client client) {
+		this.clientConnected.remove(client);
+	}
+
+	public Game startGame() {
+		try {
+			Game game = new Game(this.frame, this.roomID);
+			game.startGame();
+			return game;
+		} catch (InterruptedException | IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static void main(String[] args) {
@@ -181,17 +220,7 @@ public class WaitingRoom extends JPanel implements ActionListener {
 			p1.setVisible(false);
 			p2.setVisible(false);
 			p3.setVisible(false);
-
-			try {
-				Game game = new Game(this.frame, this.roomID);
-				game.startGame();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.startGame();
 		} else if (ae.getSource().equals(btn1)){
 			System.exit(0);
 		}

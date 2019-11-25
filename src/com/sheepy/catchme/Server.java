@@ -13,10 +13,11 @@ public class Server {
     private Socket clientSocket;
     private MongoClient mongo;
     public static int connectingClient = 0;
-    public static HashMap<String, Integer> lobbyList;
+    public static HashMap<String, WaitingRoom> lobbyList;
+    public static HashMap<String, Game> gameList;
 
     /* Start Server */
-    public void start(int port) throws Exception {        
+    public void start(int port) throws Exception {
         /* Create server */
         serverSocket = new ServerSocket(port);
         System.out.println("Server is running.");
@@ -56,6 +57,14 @@ public class Server {
         clientSocket.close();
         serverSocket.close();
         mongo.close();
+    }
+    
+    public void createRoom(String roomID) {
+    	this.lobbyList.put(roomID, new WaitingRoom());
+    }
+    
+    public void createGame(String roomID) {
+    	WaitingRoom room = this.lobbyList.get(roomID);
     }
 
     public static void main(String[] args) throws Exception {

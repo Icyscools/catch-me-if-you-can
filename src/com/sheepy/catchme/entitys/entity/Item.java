@@ -63,6 +63,7 @@ public class Item extends Entitys {
 		BufferedImage img = this.sheet.getSprite();
 		g.drawImage(img, (int)this.getX(), (int)this.getY(), (int)this.getWidth(), (int)this.getHeight(), null);
 		g.setColor(new Color(255, 127, 80)); // int r, int g, int b
+
 	}
 
 	public Shape getHitbox() {
@@ -105,3 +106,4 @@ public class Item extends Entitys {
 	}
 
 }
+

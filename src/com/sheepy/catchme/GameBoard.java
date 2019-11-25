@@ -99,7 +99,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		
 
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
-		this.setBackground(Colors.blue);
+		this.setBackground(Colors.lightblue);
 		this.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 		eventObserver.addGameListeners(this);
@@ -159,6 +159,47 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				v.setY(dy);
 				p.move();
 
+				// Update Entity position
+				for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
+					Projectile proj = iterProj.next();
+					proj.move();
+					if (proj instanceof Projectile) {
+						if (!proj.isInGameboard() || proj.getVector().getLength() <= 0.4) {
+							iterProj.remove();
+							continue;
+						}
+						for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
+							Player player = iterPlayer.next();
+							if (player instanceof Sheep) {
+								if (proj.checkCollision(player.getHitbox())) {
+									if (proj instanceof Ball) {
+										eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
+										if (((Ball)proj).getOwner() instanceof Werewolf) {
+											eventObserver.onWerewolfDoDamage(
+													new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
+										}
+									}	
+									iterPlayer.remove();
+									iterProj.remove();
+									continue;
+								}
+							}
+						}
+					}
+				}
+
+				for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
+					Item item = iterItem.next();
+					for (Player player : this.players) {
+						if (item.checkCollision(player.getHitbox())) {
+							eventObserver.onPickup(new PickupItemEvent(player, item));
+							System.out.println(player + " " + item.getName());
+							iterItem.remove();
+							break;
+						}
+					}
+				}
+
 				timeTick += Game.TICK;
 
 				if (maximumTimeTick < timeTick || this.players.size() <= 1) {
@@ -207,51 +248,16 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 			GameBoard.tileMap.paint(g2d);
 
 			// Render Entity
-			for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
-				Projectile proj = iterProj.next();
-				if (proj instanceof Projectile) {
-					if (!proj.isInGameboard() || proj.getVector().getLength() <= 0.4) {
-						iterProj.remove();
-						continue;
-					}
-					for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
-						Player player = iterPlayer.next();
-						if (player instanceof Sheep) {
-							if (proj.checkCollision(player.getHitbox())) {
-								if (proj instanceof Ball) {
-									eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
-									if (((Ball)proj).getOwner() instanceof Werewolf) {
-										eventObserver.onWerewolfDoDamage(
-												new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
-									}
-								}	
-								iterPlayer.remove();
-								iterProj.remove();
-								continue;
-							}
-						}
-					}
-				}
-				proj.move();
-				proj.paint(g2d);
+			for (Projectile _proj : this.projectiles) {
+				_proj.paint(g2d);
 			}
-
-			for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
-				Item item = iterItem.next();
-				for (Player player : this.players) {
-					if (item.checkCollision(player.getHitbox())) {
-						if((player instanceof Werewolf && !item.getName().equals("s1"))||(player instanceof Sheep && item.getName().equals("s1"))){
-							eventObserver.onPickup(new PickupItemEvent(player, item));
-							iterItem.remove();
-						}
-					}
-				}
-				item.paint(g2d);
+			
+			for (Item _item : this.item) {
+				_item.paint(g2d);
 			}
-
-			for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
-				Player player = iterPlayer.next();
-				player.paint(g2d);
+			
+			for (Player _player : this.players) {
+				_player.paint(g2d);
 			}
 
 			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2, this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);

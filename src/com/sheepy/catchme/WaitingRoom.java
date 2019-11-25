@@ -28,6 +28,10 @@ public class WaitingRoom extends JPanel implements ActionListener {
 	public WaitingRoom() {
 		this(new JFrame(Game.TITLE), 100);
 	}
+        
+        public WaitingRoom(JFrame frame) {
+            this(frame, 100);
+	}
 
 	public WaitingRoom(JFrame frame, int roomID) {
 		this.frame = frame;

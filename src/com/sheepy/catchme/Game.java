@@ -77,4 +77,12 @@ public class Game {
 		frame.setFocusable(true);
 		frame.requestFocus();
 	}
+
+    static void WaitingRoom(JFrame fr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    static void StartScene(JFrame fr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

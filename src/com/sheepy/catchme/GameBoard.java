@@ -1,6 +1,8 @@
 package com.sheepy.catchme;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import com.sheepy.catchme.entitys.entity.Player;
 import com.sheepy.catchme.entitys.entity.Sheep;
@@ -47,28 +49,24 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	private int selectedPlayer;
 	private GameState state;
 	private BufferedImage endingScene;
+	private Sound sound;
 
-	public GameBoard() throws InterruptedException, IOException {
+	public GameBoard() throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
 		this(0);
 	}
 
-	public GameBoard(int selectedPlayer) throws InterruptedException, IOException {
+	public GameBoard(int selectedPlayer) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
 		this.players = new ArrayList<Player>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
+		this.sound = new Sound();
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
-		try {
-			Sound audioPlayer = new Sound();
-			audioPlayer.play();
-		} catch (Exception ex) {
-			System.out.println("Error with playing sound.");
-			ex.printStackTrace();
-		}
+		this.sound.play();
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");
@@ -431,6 +429,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 					endingScene = ImageIO.read(getClass().getResource("image/Sheep-win.png"));
 				}
 				new WinnerScene(Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
+				this.sound.stop();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

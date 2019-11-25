@@ -16,9 +16,9 @@ import com.sheepy.catchme.events.GameListener;
 import com.sheepy.catchme.events.GameStartEvent;
 import com.sheepy.catchme.events.PickupItemEvent;
 import com.sheepy.catchme.events.WerewolfDoDamageEvent;
-import com.sheepy.catchme.sounds.Sound;
 import com.sheepy.catchme.util.Colors;
 import com.sheepy.catchme.util.Vector2D;
+import com.sheepy.catchme.sounds.Sound;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -44,7 +44,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	private List<Player> players;
 	private List<Item> item;
 	private List<Projectile> projectiles;
-//	private Sound sound;
 	private int selectedPlayer;
 	private GameState state;
 	private BufferedImage endingScene;
@@ -57,14 +56,19 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.players = new ArrayList<Player>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
-//		this.sound = new Sound();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
-//		sound.play();
+		try {
+			Sound audioPlayer = new Sound();
+			audioPlayer.play();
+		} catch (Exception ex) {
+			System.out.println("Error with playing sound.");
+			ex.printStackTrace();
+		}
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");
@@ -87,7 +91,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		// Spawn Item
 		Item _wi = new Item();
 		_wi.setName(_wi.randomItem("Werewolf"));
-		String path = "image/item_"+_wi.getName()+".png";
+		String path = "image/item_" + _wi.getName() + ".png";
 		pos = GameBoard.tileMap.getRandomGroundPosition();
 		_wi.setX(pos[0]);
 		_wi.setY(pos[1]);
@@ -100,7 +104,6 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		_si.setY(pos[1]);
 		_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
 		this.item.add(_si);
-
 
 		this.setPreferredSize(new Dimension(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT));
 		this.setBackground(Colors.lightblue);
@@ -150,7 +153,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 					p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
 				}
 
-				if (!p.getStatus().equals("None")){
+				if (!p.getStatus().equals("None")) {
 					if (p.getBuffDuration() - 1 == 0) {
 						p.setStatus("None");
 						if (p instanceof Werewolf) {
@@ -158,15 +161,15 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 						}
 						p.setBuffDuration(400);
 						System.out.println("Effect worn out");
-					}
-					else p.setBuffDuration(p.getBuffDuration() - 1);
+					} else
+						p.setBuffDuration(p.getBuffDuration() - 1);
 				}
-				
-				if (timeTick % (Game.TICK*40*15) == 0) {
+
+				if (timeTick % (Game.TICK * 40 * 15) == 0) {
 					this.item.clear();
 					Item _wi = new Item();
 					_wi.setName(_wi.randomItem("Werewolf"));
-					String path = "image/item_"+_wi.getName()+".png";
+					String path = "image/item_" + _wi.getName() + ".png";
 					int[] pos = GameBoard.tileMap.getRandomGroundPosition();
 					_wi.setX(pos[0]);
 					_wi.setY(pos[1]);
@@ -199,12 +202,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 							if (player instanceof Sheep) {
 								if (proj.checkCollision(player.getHitbox())) {
 									if (proj instanceof Ball) {
-										eventObserver.onBallHit(new BallHitEvent((Ball)proj, player));
-										if (((Ball)proj).getOwner() instanceof Werewolf) {
-											eventObserver.onWerewolfDoDamage(
-													new WerewolfDoDamageEvent((Werewolf)((Ball)proj).getOwner(), (Ball)proj, player));
+										eventObserver.onBallHit(new BallHitEvent((Ball) proj, player));
+										if (((Ball) proj).getOwner() instanceof Werewolf) {
+											eventObserver.onWerewolfDoDamage(new WerewolfDoDamageEvent(
+													(Werewolf) ((Ball) proj).getOwner(), (Ball) proj, player));
 										}
-									}	
+									}
 									iterPlayer.remove();
 									iterProj.remove();
 									continue;
@@ -218,7 +221,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 					Item item = iterItem.next();
 					for (Player player : this.players) {
 						if (item.checkCollision(player.getHitbox())) {
-							if ((player instanceof Werewolf&&!item.getName().equals("s1"))||(player instanceof Sheep&&item.getName().equals("s1"))) {
+							if ((player instanceof Werewolf && !item.getName().equals("s1"))
+									|| (player instanceof Sheep && item.getName().equals("s1"))) {
 								eventObserver.onPickup(new PickupItemEvent(player, item));
 								System.out.println(player + " " + item.getName());
 								iterItem.remove();
@@ -266,7 +270,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		if (this.getGameState() == GameState.RUNNING) {
 
 			// Translate screen to player
-			g2d.translate(-this.players.get(this.selectedPlayer).getX() + Game.WINDOW_WIDTH / 2, -this.players.get(this.selectedPlayer).getY() + Game.WINDOW_HEIGHT / 2);
+			g2d.translate(-this.players.get(this.selectedPlayer).getX() + Game.WINDOW_WIDTH / 2,
+					-this.players.get(this.selectedPlayer).getY() + Game.WINDOW_HEIGHT / 2);
 
 			// Clear screen
 			g.setColor(new Color(0, 0, 0)); // int r, int g, int b
@@ -288,11 +293,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				_player.paint(g2d);
 			}
 
-			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2, this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);
+			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2,
+					this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);
 
 			g2d.setColor(Color.WHITE);
 			g2d.setFont(new Font("Kanit", Font.BOLD, 42));
-			g2d.drawString("" + (int)(90 - Math.ceil(GameBoard.timeTick / 1000)), (int)Game.WINDOW_WIDTH / 2, 50);
+			g2d.drawString("" + (int) (90 - Math.ceil(GameBoard.timeTick / 1000)), (int) Game.WINDOW_WIDTH / 2, 50);
 		} else if (this.getGameState() == GameState.END) {
 			g.drawImage(endingScene, 0, 0, this.getWidth(), this.getHeight(), null);
 		}
@@ -311,9 +317,9 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void keyPressed(KeyEvent e) {
 		// Dash
 		// System.out.println(e.getKeyCode());
-		//		if (e.getKeyCode() == 16 && !pressed.contains(16)) {
-		//			this.players.get(this.selectedPlayer).getVector().multiply(2);
-		//		}
+		// if (e.getKeyCode() == 16 && !pressed.contains(16)) {
+		// this.players.get(this.selectedPlayer).getVector().multiply(2);
+		// }
 
 		pressed.add(e.getKeyCode());
 	}
@@ -337,7 +343,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		// MouseEvent.BUTTON1 = left click
 		Player player = this.players.get(this.selectedPlayer);
 		if (player instanceof Werewolf) {
-			if (e.getButton() == MouseEvent.BUTTON1 &&(timeTick - ballDelay >= 2000 || ballDelay == 0.0 || (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {           
+			if (e.getButton() == MouseEvent.BUTTON1 && (timeTick - ballDelay >= 2000 || ballDelay == 0.0
+					|| (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {
 				double projSize = 18.0;
 				double centerX = Game.WINDOW_WIDTH / 2;
 				double centerY = Game.WINDOW_HEIGHT / 2;
@@ -423,7 +430,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				} else {
 					endingScene = ImageIO.read(getClass().getResource("image/Sheep-win.png"));
 				}
-                                new WinnerScene(Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
+				new WinnerScene(Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

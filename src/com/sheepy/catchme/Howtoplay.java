@@ -5,6 +5,7 @@
  */
 package com.sheepy.catchme;
 
+import com.sheepy.catchme.util.Colors;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,72 +15,78 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-/**
- *
- * @author ckrittima
- */
-public class Howtoplay extends JPanel implements ActionListener{
+public class Howtoplay extends JPanel implements ActionListener {
 
-	private JFrame fr;
-	private JButton btn;
-	private JPanel p0;
+    private JFrame fr;
+    private JButton btn;
+    private JPanel p0, p1, p2, p3, p4;
 
-	public Howtoplay() {
-		this(Client.client.getJFrame());
-	}
-	public Howtoplay(JFrame frame) {
-		this.fr = frame;
-		this.fr.getContentPane().removeAll();
-		this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    public Howtoplay() {
+        this(Client.client.getJFrame());
+    }
 
-		this.setLayout(new GridBagLayout());
-		p0 = new JPanel();
-		p0.setLayout(new BorderLayout());
-		btn = new JButton("Back to Menu");
+    public Howtoplay(JFrame frame) {
+        this.fr = frame;
+        this.fr.getContentPane().removeAll();
+        this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		btn.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        p0 = new JPanel();
+        p1 = new JPanel();
+        p2 = new JPanel();
+        p3 = new JPanel();
+        p4 = new JPanel();
+        this.setLayout(new BorderLayout());
+        p1.setLayout(new GridLayout(3, 1));
+        p2.setLayout(new FlowLayout());
 
-		btn.addActionListener(this);
-		btn.setVisible(true);
+        p0.setOpaque(false);
+        p1.setOpaque(false);
+        p2.setOpaque(false);
+        p3.setOpaque(false);
+        p4.setOpaque(false);
 
-		p0.add(btn, BorderLayout.SOUTH);
-		this.add(p0);
-		this.fr.add(this);
-		this.fr.pack();
-		this.fr.setSize(640, 640);
-		this.fr.setResizable(false);
-		this.fr.setVisible(true);
-		this.fr.revalidate();
-		this.fr.repaint();
+        btn = new JButton("Back");
+        btn.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        btn.setBackground(Color.white);
+        btn.setForeground(Colors.blue);
 
-	}
+        btn.addActionListener(this);
 
+        p2.add(btn);
+        p1.add(p2);
+        this.add(p1, BorderLayout.SOUTH);
+        this.add(p0);
 
-	@Override
-	public void paintComponent(Graphics g) {
-		// paint ...
-		super.paintComponent(g);
+        fr.add(this);
+        fr.pack();
+        fr.setSize(640, 640);
+        fr.setResizable(false);
+        fr.setVisible(true);
+        fr.revalidate();
+        fr.repaint();
 
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
 
-		try {
-			BufferedImage img = ImageIO.read(getClass().getResource("image/Howto.png"));
-			g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-			System.out.println(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void paintComponent(Graphics g) {
+        // paint ...
+        super.paintComponent(g);
 
-	public static void main(String[] args) {
-		new Howtoplay();
-	}
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(btn)) {
-			new StartScene(this.fr);
-		}
-	}
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource("image/Howto.png"));
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+            System.out.println(1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(btn)) {
+            new StartScene();
+        }
+    }
 }

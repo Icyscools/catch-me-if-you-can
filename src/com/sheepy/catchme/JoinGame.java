@@ -1,5 +1,6 @@
 package com.sheepy.catchme;
 
+import com.sheepy.catchme.util.Colors;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -34,63 +35,63 @@ public class JoinGame extends JPanel implements ActionListener {
 	}
 
 	public JoinGame(JFrame frame) {
-		this.fr = frame;
-		this.fr.getContentPane().removeAll();
-		this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		p0 = new JPanel();
-		p1 = new JPanel();
-		p2 = new JPanel();
-		p3 = new JPanel();
-		p4 = new JPanel();
-		this.setLayout(new GridLayout(3, 1));
-		p1.setLayout(new BorderLayout());
-		p2.setLayout(new FlowLayout());
-		p3.setLayout(new FlowLayout());
-		p4.setLayout(new GridLayout(2, 1));
+        this.fr = frame;
+        this.fr.getContentPane().removeAll();
+        this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        p0 = new JPanel();
+        p1 = new JPanel();
+        p2 = new JPanel();
+        p3 = new JPanel();
+        p4 = new JPanel();
+        this.setLayout(new GridLayout(3, 1));
+        p1.setLayout(new BorderLayout());
+        p2.setLayout(new FlowLayout());
+        p3.setLayout(new FlowLayout());
+        p4.setLayout(new GridLayout(2, 1));
 
-		p0.setOpaque(false);
-		p1.setOpaque(false);
-		p2.setOpaque(false);
-		p3.setOpaque(false);
-		p4.setOpaque(false);
+        p0.setOpaque(false);
+        p1.setOpaque(false);
+        p2.setOpaque(false);
+        p3.setOpaque(false);
+        p4.setOpaque(false);
 
-		lb1 = new JLabel("Join Game", JLabel.CENTER);
-		lb1.setFont(new Font("TimesRoman", Font.BOLD, 45));
+        lb1 = new JLabel("Join Game", JLabel.CENTER);
+        lb1.setFont(new Font("TimesRoman", Font.BOLD, 45));
 
-		lb2 = new JLabel("Room ID:", JLabel.CENTER);
-		lb2.setFont(new Font("TimesRoman", Font.BOLD, 18));
-		pass = new JTextField(10);
-		pass.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 20));
-		btn1 = new JButton("Join");
-		btn1.setFont(new Font("TimesRoman", Font.BOLD, 20));
-		btn2 = new JButton("Back");
-		btn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        lb2 = new JLabel("Room ID:", JLabel.CENTER);
+        lb2.setFont(new Font("TimesRoman", Font.BOLD, 18));
+        pass = new JTextField(10);
+        pass.setFont(new Font("TimesRoman", Font.CENTER_BASELINE, 20));
+        btn1 = new JButton("Join");
+        btn1.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        btn2 = new JButton("Back");
+        btn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        btn1.setBackground(Color.white);
+        btn1.setForeground(Colors.blue);
+        btn2.setBackground(Color.white);
+        btn2.setForeground(Colors.blue);
 
-		btn1.addActionListener(this);
-		btn2.addActionListener(this);
+        btn1.addActionListener(this);
+        btn2.addActionListener(this);
 
-		p1.add(lb1, BorderLayout.SOUTH);
-		p2.add(lb2);
-		p2.add(pass);
-		p3.add(btn1);
-		p3.add(btn2);
-		p4.add(p2);
-		p4.add(p3);
+        p1.add(lb1, BorderLayout.SOUTH);
+        p2.add(lb2);
+        p2.add(pass);
+        p3.add(btn1);
+        p3.add(btn2);
+        p4.add(p2);
+        p4.add(p3);
 
-		this.add(p1);
-		this.add(p4);
+        this.add(p1);
+        this.add(p4);
 
-		this.fr.add(this);
-		this.fr.pack();
-		this.fr.setSize(640, 640);
-		this.fr.setResizable(false);
-		this.fr.setVisible(true);
-		this.fr.revalidate();
-		this.fr.repaint();
-	}
-
-	public static void main(String[] args) {
-		new JoinGame();
+        this.fr.add(this);
+        this.fr.pack();
+        this.fr.setSize(640, 640);
+        this.fr.setResizable(false);
+        this.fr.setVisible(true);
+        this.fr.revalidate();
+        this.fr.repaint();
 	}
 	
 	@Override
@@ -123,7 +124,7 @@ public class JoinGame extends JPanel implements ActionListener {
 			}
 		}
 		if (ae.getSource().equals(btn2)) {
-			new StartScene(this.fr);
+			new StartScene();
 		}
 	}
 }

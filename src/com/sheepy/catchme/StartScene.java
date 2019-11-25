@@ -1,5 +1,6 @@
 package com.sheepy.catchme;
 
+import com.sheepy.catchme.util.Colors;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +15,8 @@ public class StartScene extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JFrame fr;
     private JButton bn1, bn2, bn3;
-    private JPanel p0;
+    private JPanel p0, p1, p2, p3, p4;
+    private JLabel lb;
 
     public StartScene() {
         this(Client.client.getJFrame());
@@ -25,10 +27,26 @@ public class StartScene extends JPanel implements ActionListener {
         this.fr.setLayout(new BorderLayout());
         this.fr.getContentPane().removeAll();
         
-        this.setLayout(new GridBagLayout());
         p0 = new JPanel();
-        GridLayout grid = new GridLayout(3, 1);
-        p0.setLayout(grid);
+        p1 = new JPanel();
+        p2 = new JPanel();
+        p3 = new JPanel();
+        p4 = new JPanel();
+        lb = new JLabel();
+        
+        this.setLayout(new GridLayout(3, 1));
+        p0.setLayout(new BorderLayout());
+        p1.setLayout(new FlowLayout());
+        p2.setLayout(new FlowLayout());
+        p3.setLayout(new FlowLayout());
+        p4.setLayout(new GridLayout(3, 1));
+
+        p0.setOpaque(false);
+        p1.setOpaque(false);
+        p2.setOpaque(false);
+        p3.setOpaque(false);
+        p4.setOpaque(false);
+        
         bn1 = new JButton("New Game");
         bn2 = new JButton("Join Game");
         bn3 = new JButton("How To Play");
@@ -36,18 +54,34 @@ public class StartScene extends JPanel implements ActionListener {
         bn1.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn2.setFont(new Font("TimesRoman", Font.BOLD, 20));
         bn3.setFont(new Font("TimesRoman", Font.BOLD, 20));
-
+        bn1.setBackground(Color.white);
+        bn1.setForeground(Colors.blue);
+        bn2.setBackground(Color.white);
+        bn2.setForeground(Colors.blue);
+        bn3.setBackground(Color.white);
+        bn3.setForeground(Colors.blue);
+        
+        bn1.setPreferredSize(new Dimension(160, 40));
+        bn2.setPreferredSize(new Dimension(160, 40));
+        bn3.setPreferredSize(new Dimension(160, 40));
+       
         bn1.addActionListener(this);
         bn2.addActionListener(this);
         bn3.addActionListener(this);
+        
         bn1.setVisible(true);
         bn2.setVisible(true);
         bn3.setVisible(true);
 
-        p0.add(bn1);
-        p0.add(bn2);
-        p0.add(bn3);
+        p1.add(bn1);
+        p2.add(bn2);
+        p3.add(bn3);
+        p4.add(p1);
+        p4.add(p2);
+        p4.add(p3);
+        p0.add(p4, BorderLayout.SOUTH);
 
+        this.add(lb);
         this.add(p0);
         this.fr.add(this);
         this.fr.pack();
@@ -74,10 +108,6 @@ public class StartScene extends JPanel implements ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    
-    public static void main(String[] args) {
-        new StartScene();
     }
 
     @Override

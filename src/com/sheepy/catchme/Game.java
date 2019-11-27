@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import com.sheepy.catchme.enums.GameState;
@@ -20,26 +22,18 @@ public class Game {
 	public static String TITLE = "Sheepy VS Werewolf";
 	public JFrame frame;
 	private GameBoard gameBoard;
-	private String roomID;
-	private List<Client> clientConnected;
 	
-	public static void main(String[] args) throws InterruptedException, IOException {
+	public static void main(String[] args) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
 		Game game = new Game();
 		game.startGame();
 	}
 	
 	public Game() {
-		this(new JFrame(Game.TITLE), "5050", new ArrayList<Client>());
+		this(Client.client.getJFrame());
 	}
 	
-	public Game(JFrame frame, String roomID) {
-		this(frame, roomID, new ArrayList<Client>());
-	}
-
-	public Game(JFrame frame, String roomID, List<Client> clients) {
+	public Game(JFrame frame) {
 		this.frame = frame;
-		this.roomID = roomID;
-		this.clientConnected = clients;
 	}
 	
 	public JFrame getJFrame() {
@@ -50,19 +44,11 @@ public class Game {
 		this.frame = frame;
 	}
 	
-	public String getRoomID() {
-		return this.roomID;
+	public void startGame() throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
+		this.startGame(this.frame);
 	}
 	
-	public void setRoomID(String roomID) {
-		this.roomID = roomID;
-	}
-	
-	public void startGame() throws InterruptedException, IOException {
-		this.startGame(Client.client.getJFrame());
-	}
-	
-	public void startGame(JFrame frame) throws InterruptedException, IOException {
+	public void startGame(JFrame frame) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
 		frame.getContentPane().removeAll();
 		this.gameBoard = new GameBoard();
 		frame.add(this.gameBoard, BorderLayout.CENTER);
@@ -77,12 +63,4 @@ public class Game {
 		frame.setFocusable(true);
 		frame.requestFocus();
 	}
-
-    static void WaitingRoom(JFrame fr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    static void StartScene(JFrame fr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

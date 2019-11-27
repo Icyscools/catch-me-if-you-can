@@ -2,6 +2,7 @@ package com.sheepy.catchme;
 
 import java.net.*;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class ClientHandler extends Thread {
 	private Socket clientSocket;
 	private MongoCollection<Document> collection;
 	public static int threadID = 0;
+	private boolean updateLobby = false;
 
 	public ClientHandler(Socket clientSocket, MongoCollection<Document> collection) {
 		this.clientSocket = clientSocket;
@@ -30,7 +32,7 @@ public class ClientHandler extends Thread {
 		return Server.connectingClient;
 	}
 
-	public void updateWaitingRoom(List<WaitingRoom> rooms) {
+	public void updateWaitingRoom(List<Account> rooms) {
 		try {
 			toClient = new ObjectOutputStream(clientSocket.getOutputStream());
 			fromClient = new ObjectInputStream(clientSocket.getInputStream());
@@ -55,18 +57,18 @@ public class ClientHandler extends Thread {
 
 				/* Read message from Client */
 				Object[] document = (Object[]) fromClient.readObject();
-				Document userInfo = (Document) document[1];
-				String username = userInfo.getString("username");
-				String password = userInfo.getString("password");
-
-				/* Hashing user's password using MD5 Algorithm */
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				md.update(password.getBytes());
-				byte[] digest = md.digest();
-				// password = DatatypeConverter.printHexBinary(digest).toLowerCase();
-				userInfo.put("password", password); // Update user's password in Document
 
 				if (document[0].equals("regis")) {
+					Document userInfo = (Document) document[1];
+					String username = userInfo.getString("username");
+					String password = userInfo.getString("password");
+
+					/* Hashing user's password using MD5 Algorithm */
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					md.update(password.getBytes());
+					byte[] digest = md.digest();
+					// password = DatatypeConverter.printHexBinary(digest).toLowerCase();
+					userInfo.put("password", password); // Update user's password in Document
 					if (collection.find(eq("username", username)).first() == null) {
 						/* Write user's information to Database */
 						collection.insertOne((Document) document[1]);
@@ -81,6 +83,16 @@ public class ClientHandler extends Thread {
 					break;
 				}
 				else if (document[0].equals("login")) {
+					Document userInfo = (Document) document[1];
+					String username = userInfo.getString("username");
+					String password = userInfo.getString("password");
+
+					/* Hashing user's password using MD5 Algorithm */
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					md.update(password.getBytes());
+					byte[] digest = md.digest();
+					// password = DatatypeConverter.printHexBinary(digest).toLowerCase();
+					userInfo.put("password", password); // Update user's password in Document
 					if (collection.find(and(
 							eq("username", username),
 							eq("password", password))).first() != null) {
@@ -92,10 +104,10 @@ public class ClientHandler extends Thread {
 					}
 				}
 				else if (document[0].equals("join")) {
-					Server.lobby.addConnectionPlayer(this, (WaitingRoom) document[1]);
-					for (Map.Entry<ClientHandler, WaitingRoom> map : Server.lobby.getConnectionPlayer().entrySet()) {
-						map.getKey().updateWaitingRoom((List<WaitingRoom>) Server.lobby.getConnectionPlayer().values());
-					}
+//					Server.lobby.addConnectionPlayer(this, (Account) document[1]);
+//					for (Map.Entry<ClientHandler, Account> map : Server.lobby.getConnectionPlayer().entrySet()) {
+//						map.getKey().updateWaitingRoom(new ArrayList<Account>(Server.lobby.getConnectionPlayer().values()));
+//					}
 				}
 			}
 			catch (Exception ex) {

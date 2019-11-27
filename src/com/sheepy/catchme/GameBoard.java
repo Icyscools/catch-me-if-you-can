@@ -61,12 +61,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
-		this.sound = new Sound();
+//		this.sound = new Sound();
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
-		this.sound.play();
+//		this.sound.play();
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");
@@ -120,28 +120,28 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				double dx = 0, dy = 0;
 				if (this.pressed.contains(65)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dx -= 6;
+						dx -= 7.5;
 					} else {
 						dx -= 5;
 					}
 				}
 				if (this.pressed.contains(68)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dx += 6;
+						dx += 7.5;
 					} else {
 						dx += 5;
 					}
 				}
 				if (this.pressed.contains(87)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dy -= 6;
+						dy -= 7.5;
 					} else {
 						dy -= 5;
 					}
 				}
 				if (this.pressed.contains(83)) {
 					if (p.getStatus().equals("Speed Boost")) {
-						dy += 6;
+						dy += 7.5;
 					} else {
 						dy += 5;
 					}

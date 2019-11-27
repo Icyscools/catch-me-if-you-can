@@ -1,21 +1,17 @@
 package com.sheepy.catchme;
 
-import com.sheepy.catchme.events.GameEndEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -89,13 +85,14 @@ public class WinnerScene extends JPanel implements ActionListener {
         this.add(p1);
         this.add(p4);
 
-        fr.add(this);
-        fr.pack();
-        fr.setSize(640, 640);
-        fr.setResizable(false);
-        fr.setVisible(true);
-        fr.revalidate();
-        fr.repaint();
+        this.fr.add(this);
+        this.fr.pack();
+		this.fr.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+		this.fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.fr.setResizable(false);
+        this.fr.setVisible(true);
+        this.fr.revalidate();
+        this.fr.repaint();
     }
 
     public void paintComponent(Graphics g) {
@@ -115,7 +112,7 @@ public class WinnerScene extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource().equals(btn1)) {
-            new StartScene(this.fr);
+            new StartScene();
         }
 
     }

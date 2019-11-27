@@ -59,7 +59,7 @@ public class Howtoplay extends JPanel implements ActionListener {
 
         fr.add(this);
         fr.pack();
-        fr.setSize(640, 640);
+		fr.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
         fr.setResizable(false);
         fr.setVisible(true);
         fr.revalidate();

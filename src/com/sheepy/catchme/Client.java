@@ -14,9 +14,9 @@ public class Client implements ActionListener, Serializable {
 	private JTextField ipTf, userTf;
 	private JPasswordField passTf;
 	private JButton connectBtn, loginBtn, regisBtn;
-	private transient Socket clientSocket;
-	private transient ObjectOutputStream toServer;	// Request to server
-	private transient ObjectInputStream fromServer;	// Response from server
+	private Socket clientSocket;
+	private ObjectOutputStream toServer;	// Request to server
+	private ObjectInputStream fromServer;	// Response from server
 	private Account account;
 	public static Client client;
 	public static String serverIp;
@@ -142,6 +142,9 @@ public class Client implements ActionListener, Serializable {
 					status.setText("Login successful!");
 					this.account = (Account) response;
 					this.account.setClient(this);
+					System.out.println(this.account.getUsername());
+					System.out.println(clientSocket);
+					Server.connectingClient.put(this.account.getUsername(), this.clientSocket); // Add this client (username, socket) to Hashmap
 					serverIp = ipTf.getText();
 					serverPort = 5555;
 					new StartScene();
@@ -149,6 +152,7 @@ public class Client implements ActionListener, Serializable {
 					System.out.println("login fail");
 					status.setText((String) response);
 				}
+				Server.showAllConnectingClients();
 			}
 			catch (Exception ex) {
 				status.setText(ex.toString());
@@ -192,7 +196,7 @@ public class Client implements ActionListener, Serializable {
 		case "join":
 			document = new Object[2];
 			document[0] = option;
-			document[1] = (Account)object;
+			document[1] = object;
 			break;
 		default:
 			System.out.println("Option not found : " + option);
@@ -203,14 +207,14 @@ public class Client implements ActionListener, Serializable {
 			/* Create I/O Stream */
 			toServer = new ObjectOutputStream(clientSocket.getOutputStream());
 			fromServer = new ObjectInputStream(clientSocket.getInputStream());
-			System.out.println(document[0] + " " + document[1].toString());
-			/* Send Document to Server */
-			toServer.writeObject(document);
-//			response = fromServer.readObject();
-//			System.out.println(response.toString());
-		}
 
-		this.stopConnection();
+			/* Send Document to Server */
+			System.out.println(document[1].toString());
+			toServer.writeObject(document);
+			response = fromServer.readObject();
+			System.out.println(response.toString());
+		}
+		
 		return response != null ? response : null;
 	}
 
@@ -242,7 +246,6 @@ public class Client implements ActionListener, Serializable {
 		toServer.writeObject(documentArr);
 		Object response = fromServer.readObject();
 		System.out.println(response.toString());
-		this.stopConnection();
 		return response;
 	}
 

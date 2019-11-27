@@ -1,6 +1,9 @@
 package com.sheepy.catchme;
 
+import java.io.*;
 import java.net.*;
+import java.util.*;
+
 import org.bson.Document;
 import java.io.*;
 import com.mongodb.*;
@@ -11,11 +14,18 @@ public class Server {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private MongoClient mongo;
-    public static int connectingClient = 0;
+    public static HashMap<String, Socket> connectingClient = new HashMap<String, Socket>();
+    public static int connectingClientAmount = 0;
     public static Lobby lobby;
+    private static ObjectOutputStream toClient;
+    private static ObjectInputStream fromClient;
 
     /* Start Server */
     public void start(int port) throws Exception {
+    	/* Create Client List */
+    	connectingClient.put("test", null);
+    	
+    	
         /* Create server */
         serverSocket = new ServerSocket(port);
         lobby = new Lobby();
@@ -36,6 +46,7 @@ public class Server {
                 /* Accept client's request */
                 clientSocket = serverSocket.accept();
                 System.out.println(clientSocket + " has connected.");
+                showAllConnectingClients();
 
                 /* Create a new Thread to handling client */
                 System.out.println("Assigning a new Thread for " + clientSocket);
@@ -56,6 +67,26 @@ public class Server {
         clientSocket.close();
         serverSocket.close();
         mongo.close();
+    }
+    
+    /* Display HashMap of connecting clients (String, Socket) on Server's Terminal */
+    public static void showAllConnectingClients() {
+    	for (Map.Entry<String, Socket> entry: connectingClient.entrySet()) {
+    		System.out.println(entry.getKey() + ": " + entry.getValue());
+    	}
+    }
+    
+    /* Send object to all connecting clients */
+    public static void broadcastObject(Object obj) throws IOException, ClassNotFoundException {
+    	for (Map.Entry<String, Socket> entry: connectingClient.entrySet()) {
+    		toClient = new ObjectOutputStream(entry.getValue().getOutputStream());
+    		fromClient = new ObjectInputStream(entry.getValue().getInputStream());
+    		
+    		// To Do
+    		
+//    		Object recieveObj = fromClient.readObject();
+//    		toClient.writeObject(obj);
+    	}
     }
 
     public static void main(String[] args) throws Exception {

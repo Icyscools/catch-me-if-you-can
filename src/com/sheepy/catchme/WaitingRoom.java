@@ -9,18 +9,19 @@ import com.sheepy.catchme.util.Colors;
 
 import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.List;
-import java.awt.Color;
 
 public class WaitingRoom extends JPanel implements ActionListener, Serializable {
 
@@ -110,6 +111,11 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 		tf4.setHorizontalAlignment(JTextField.CENTER);
 		tf5.setHorizontalAlignment(JTextField.CENTER);
 
+		tf1.setOpaque(false);
+		tf2.setOpaque(false);
+		tf3.setOpaque(false);
+		tf4.setOpaque(false);
+		tf5.setOpaque(false);
 		// tf1.setText("Sheep 1");
 		// tf2.setText("Sheep 2");
 		// tf3.setText("Sheep 3");
@@ -128,6 +134,10 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 		p2.add(btn);
 		p2.add(btn1);
 		p3.add(lb);
+
+		p1.setOpaque(false);
+		p2.setOpaque(false);
+		p3.setOpaque(false);
 
 		this.setLayout(new BorderLayout());
 		this.add(p3, BorderLayout.NORTH);
@@ -152,18 +162,23 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 		case 5:
 			tf5.setBackground(Colors.lviolet);
 			tf5.setText(connectionPlayer.get(4).getUsername());
+			tf5.setOpaque(true);
 		case 4:
 			tf4.setBackground(Colors.lblue);
 			tf4.setText(connectionPlayer.get(3).getUsername());
+			tf4.setOpaque(true);
 		case 3:
 			tf3.setBackground(Colors.lgreen);
 			tf3.setText(connectionPlayer.get(2).getUsername());
+			tf3.setOpaque(true);
 		case 2:
 			tf2.setBackground(Colors.lyellow);
 			tf2.setText(connectionPlayer.get(1).getUsername());
+			tf2.setOpaque(true);
 		case 1:
 			tf1.setBackground(Colors.lred);
 			tf1.setText(connectionPlayer.get(0).getUsername());
+			tf1.setOpaque(true);
 		default:
 			break;
 		}
@@ -186,6 +201,22 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 		}
 		return game;
 	}
+	
+	@Override
+    public void paintComponent(Graphics g) {
+        // paint ...
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource("image/join_player.png"));
+            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {

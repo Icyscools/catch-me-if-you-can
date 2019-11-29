@@ -1,15 +1,19 @@
 package com.sheepy.catchme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
 import org.bson.Document;
 
+import com.sheepy.catchme.util.Colors;
+
 public class Client implements ActionListener, Serializable {
 	private JFrame frame;
-	private JPanel p0, p1, p2, p3, p4;
+	private JPanel p, p0, p1, p2, p3, p4;
 	private JLabel instructionLb, ipLb, titleLb, userLb, passLb, status;
 	private JTextField ipTf, userTf;
 	private JPasswordField passTf;
@@ -24,6 +28,23 @@ public class Client implements ActionListener, Serializable {
 
 	public Client() {
 		this.frame = new JFrame(Game.TITLE + " - Client");
+		p = new JPanel() {
+			@Override
+		    public void paintComponent(Graphics g) {
+		        // paint ...
+		        super.paintComponent(g);
+
+		        Graphics2D g2d = (Graphics2D) g;
+		        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		        try {
+		            BufferedImage img = ImageIO.read(getClass().getResource("image/join_player.png"));
+		            g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        }
+		    }
+		};
 		p0 = new JPanel();	// Title Label
 		p1 = new JPanel();	// Username / Instruction
 		p2 = new JPanel();	// Password / Server's IP Address
@@ -50,6 +71,25 @@ public class Client implements ActionListener, Serializable {
 		p2.setLayout(new FlowLayout());
 		p3.setLayout(new FlowLayout());
 		p4.setLayout(new FlowLayout());
+		p.setLayout(new GridLayout(8, 1));
+		
+		JPanel pt = new JPanel();
+		pt.setOpaque(false);
+		p0.setOpaque(false);
+		p1.setOpaque(false);
+		p2.setOpaque(false);
+		p3.setOpaque(false);
+		p4.setOpaque(false);
+		
+		p.add(pt);
+		p.add(pt);
+		p.add(p0);
+		p.add(p1);
+		p.add(p2);
+		p.add(p3);
+		p.add(p4);
+		p.revalidate();
+		p.repaint();
 
 		loginBtn.addActionListener(this);
 		regisBtn.addActionListener(this);
@@ -58,14 +98,9 @@ public class Client implements ActionListener, Serializable {
 		this.showConnectionPanel();
 
 		this.frame.add(new JPanel());
-		this.frame.add(p0);
-		this.frame.add(p1);
-		this.frame.add(p2);
-		this.frame.add(p3);
-		this.frame.add(p4);
+		this.frame.add(p);
 
 		this.frame.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
-		this.frame.setLayout(new GridLayout(8, 1));
 		this.frame.setResizable(false);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setVisible(true);

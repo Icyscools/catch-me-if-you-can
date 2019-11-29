@@ -30,9 +30,7 @@ public class Sound {
 
 	public void play() {
 		// start the clip
-		while (true) {
-			clip.start();
-		}
+		clip.start();
 	}
 	
 	public void stop() {

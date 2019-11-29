@@ -61,12 +61,11 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		this.item = new ArrayList<Item>();
 		this.state = GameState.RUNNING;
 		this.selectedPlayer = selectedPlayer;
-//		this.sound = new Sound();
+		this.sound = new Sound();
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
-//		this.sound.play();
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");
@@ -109,6 +108,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 		eventObserver.addGameListeners(this);
 		eventObserver.onGameStart(new GameStartEvent(this));
+		this.sound.play();
 	}
 
 	@Override
@@ -347,10 +347,10 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				double centerX = Game.WINDOW_WIDTH / 2;
 				double centerY = Game.WINDOW_HEIGHT / 2;
 
-				Vector2D vect = new Vector2D();
-				System.out.println("x: " + e.getXOnScreen() + " " + e.getX());
-				System.out.println("y: " + e.getYOnScreen() + " " + e.getY());
-				vect.add((double) e.getX() - centerX, (double) e.getY() - centerY);
+				Vector2D vectFrom = new Vector2D(0, 0);
+				Vector2D vectTo = new Vector2D(e.getX() - centerX, e.getY() - centerY).getNormalized();
+				Vector2D vect = vectTo.getSubtracted(vectFrom);
+				System.out.println(vect);
 				vect.normalize();
 				System.out.println(vect);
 

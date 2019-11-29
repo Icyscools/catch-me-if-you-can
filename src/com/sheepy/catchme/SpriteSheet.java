@@ -21,7 +21,7 @@ public class SpriteSheet {
 		this.spriteWidth = (double)this.sheet.getWidth() / frame;
 		this.spriteHeight = this.sheet.getHeight();
 		this.maxStep = frame;
-		System.out.println(this.sheet.toString());
+//		System.out.println(this.sheet.toString());
 //		System.out.println((double)this.spriteWidth / (double)this.spriteHeight);
 	}
 	

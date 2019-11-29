@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import com.sheepy.catchme.GameBoard;
+import com.sheepy.catchme.SpriteSheet;
 import com.sheepy.catchme.events.PickupItemListener;
 import com.sheepy.catchme.events.PlayerMoveListener;
 import com.sheepy.catchme.events.WerewolfDoDamageEvent;
@@ -14,28 +16,37 @@ import com.sheepy.catchme.events.WerewolfDoDamageListener;
 public class Werewolf extends Player implements PickupItemListener, PlayerMoveListener, WerewolfDoDamageListener {
 
 	public Werewolf() {
-		super();
+		this(0, 0);
 	}
 
 	public Werewolf(int x, int y) {
-		super(x, y);
+		this(x, y, 25.0, 25.0, "Werewolf");
 	}
 
 	public Werewolf(String name) {
-		super(name);
+		this(25.0, 25.0, name);
 	}
 
 	public Werewolf(double width, double height) {
-		super(width, height);
+		this(width, height, "Werewolf");
 	}
 
 	public Werewolf(double width, double height, String name) {
-		super(width, height, name);
+		this(0, 0, width, height, name);
 	}
 
 	public Werewolf(int x, int y, double width, double height, String name) {
-		super(x, y, width, height, name);
-		GameBoard.eventObserver.addWerewolfDoDamageListener(this);
+		super(x, y, width, height, name, null, 5555);
+	}
+	
+	public Werewolf(int x, int y, double width, double height, String name, String ipAddr, int port) {
+		super(x, y, width, height, name, ipAddr, port);
+		try {
+			this.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+			GameBoard.eventObserver.addWerewolfDoDamageListener(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

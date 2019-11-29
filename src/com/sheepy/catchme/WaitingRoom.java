@@ -33,7 +33,7 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 //	private ObjectOutputStream toServer;
 
 	public WaitingRoom() {
-		this(Client.client.getJFrame());
+		this(_Client.client.getJFrame());
 	}
 
 	public WaitingRoom(JFrame frame) {
@@ -146,27 +146,27 @@ public class WaitingRoom extends JPanel implements ActionListener, Serializable 
 		this.frame.repaint();
 	}
 
-	public void updatePlayer(List<Account> connectionPlayer) {
-		System.out.println(connectionPlayer);
-		switch (connectionPlayer.size()) {
-		case 5:
-			tf5.setBackground(Colors.lviolet);
-			tf5.setText(connectionPlayer.get(4).getUsername());
-		case 4:
-			tf4.setBackground(Colors.lblue);
-			tf4.setText(connectionPlayer.get(3).getUsername());
-		case 3:
-			tf3.setBackground(Colors.lgreen);
-			tf3.setText(connectionPlayer.get(2).getUsername());
-		case 2:
-			tf2.setBackground(Colors.lyellow);
-			tf2.setText(connectionPlayer.get(1).getUsername());
-		case 1:
-			tf1.setBackground(Colors.lred);
-			tf1.setText(connectionPlayer.get(0).getUsername());
-		default:
-			break;
-		}
+	public void updatePlayer() {// List<Account> connectionPlayer) {
+//		System.out.println(connectionPlayer);
+//		switch (connectionPlayer.size()) {
+//		case 5:
+//			tf5.setBackground(Colors.lviolet);
+//			tf5.setText(connectionPlayer.get(4).getUsername());
+//		case 4:
+//			tf4.setBackground(Colors.lblue);
+//			tf4.setText(connectionPlayer.get(3).getUsername());
+//		case 3:
+//			tf3.setBackground(Colors.lgreen);
+//			tf3.setText(connectionPlayer.get(2).getUsername());
+//		case 2:
+//			tf2.setBackground(Colors.lyellow);
+//			tf2.setText(connectionPlayer.get(1).getUsername());
+//		case 1:
+//			tf1.setBackground(Colors.lred);
+//			tf1.setText(connectionPlayer.get(0).getUsername());
+//		default:
+//			break;
+//		}
 		this.frame.revalidate();
 		this.frame.repaint();
 	}

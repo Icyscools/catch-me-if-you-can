@@ -7,7 +7,7 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
-public class Server {
+public class _Server {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private MongoClient mongo;
@@ -39,7 +39,7 @@ public class Server {
 
                 /* Create a new Thread to handling client */
                 System.out.println("Assigning a new Thread for " + clientSocket);
-                Thread t = new ClientHandler(clientSocket, collection);
+                Thread t = new _ClientHandler(clientSocket, collection);
                 t.start();
             }
             catch (Exception e) {
@@ -59,7 +59,7 @@ public class Server {
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server();
+        _Server server = new _Server();
         server.start(5555);
     }
 }

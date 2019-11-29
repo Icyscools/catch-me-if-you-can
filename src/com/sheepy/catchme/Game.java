@@ -13,6 +13,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 
 import com.sheepy.catchme.enums.GameState;
+import com.sheepy.catchme.packets.Packet00Login;
 
 public class Game {
 
@@ -22,14 +23,17 @@ public class Game {
 	public static String TITLE = "Sheepy VS Werewolf";
 	public JFrame frame;
 	private GameBoard gameBoard;
+
+	private GameClient socketClient;
+	private GameServer socketServer;
 	
 	public static void main(String[] args) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
-		Game game = new Game();
+		Game game = new Game(new JFrame());
 		game.startGame();
 	}
 	
 	public Game() {
-		this(Client.client.getJFrame());
+		this(_Client.client.getJFrame());
 	}
 	
 	public Game(JFrame frame) {
@@ -62,5 +66,14 @@ public class Game {
 		frame.addWindowListener(this.gameBoard);
 		frame.setFocusable(true);
 		frame.requestFocus();
+		
+		socketServer = new GameServer(this.gameBoard);
+		socketServer.start();
+		
+		socketClient = new GameClient(this.gameBoard, this.frame, "127.0.0.1");
+		socketClient.start();
+		
+		Packet00Login loginPacket = new Packet00Login("test");
+		loginPacket.writeData(socketClient);
 	}
 }

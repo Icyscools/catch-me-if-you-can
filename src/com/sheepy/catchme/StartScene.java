@@ -19,7 +19,7 @@ public class StartScene extends JPanel implements ActionListener {
 	private JLabel lb;
 
 	public StartScene() {
-		this(Client.client.getJFrame());
+		this(_Client.client.getJFrame());
 	}
 
 	public StartScene(JFrame fr) {
@@ -80,7 +80,7 @@ public class StartScene extends JPanel implements ActionListener {
 		this.fr.setVisible(true);
 		this.fr.revalidate();
 		this.fr.repaint();
-		System.out.println(Client.client.getAccount().toString());
+		System.out.println(_Client.client.getAccount().toString());
 	}
 
 	@Override

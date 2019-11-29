@@ -12,7 +12,7 @@ import java.io.*;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.*;
 
-public class ClientHandler extends Thread {
+public class _ClientHandler extends Thread {
 	private ObjectInputStream fromClient;
 	private ObjectOutputStream toClient;
 	private Socket clientSocket;
@@ -20,16 +20,16 @@ public class ClientHandler extends Thread {
 	public static int threadID = 0;
 	private boolean updateLobby = false;
 
-	public ClientHandler(Socket clientSocket, MongoCollection<Document> collection) {
+	public _ClientHandler(Socket clientSocket, MongoCollection<Document> collection) {
 		this.clientSocket = clientSocket;
 		this.collection = collection;
-		Server.connectingClient++;
+		_Server.connectingClient++;
 		threadID++;
-		System.out.println(Server.connectingClient + " client(s) is/are connecting");
+		System.out.println(_Server.connectingClient + " client(s) is/are connecting");
 	}
 
 	public int getConnectingClient() {
-		return Server.connectingClient;
+		return _Server.connectingClient;
 	}
 
 	public void updateWaitingRoom(List<Account> rooms) {
@@ -116,8 +116,8 @@ public class ClientHandler extends Thread {
 			}
 		}
 		System.out.println("Closing connection. Thread #" + threadID + " has closed.");
-		Server.connectingClient--;
+		_Server.connectingClient--;
 		threadID--;
-		System.out.println(Server.connectingClient + " client(s) is/are connecting now.");
+		System.out.println(_Server.connectingClient + " client(s) is/are connecting now.");
 	}
 }

@@ -5,6 +5,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import com.sheepy.catchme.entitys.entity.Player;
+import com.sheepy.catchme.entitys.entity.PlayerMP;
 import com.sheepy.catchme.entitys.entity.Sheep;
 import com.sheepy.catchme.entitys.entity.Werewolf;
 import com.sheepy.catchme.entitys.entity.Item;
@@ -43,7 +44,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public static TileMap tileMap;
 	public static EventObserver eventObserver;
 	private final Set<Integer> pressed = new HashSet<Integer>();
-	private List<Player> players;
+	private List<PlayerMP> players;
 	private List<Item> item;
 	private List<Projectile> projectiles;
 	private int selectedPlayer;
@@ -56,35 +57,33 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	}
 
 	public GameBoard(int selectedPlayer) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
-		this.players = new ArrayList<Player>();
+		this.players = new ArrayList<PlayerMP>();
 		this.projectiles = new ArrayList<Projectile>();
 		this.item = new ArrayList<Item>();
-		this.state = GameState.RUNNING;
+		this.state = GameState.PAUSE;
 		this.selectedPlayer = selectedPlayer;
-//		this.sound = new Sound();
+		//		this.sound = new Sound();
 		GameBoard.tileMap = new TileMap(32, 32);
 		GAME_WIDTH = GameBoard.tileMap.getWidth() * TileMap.getTileSize();
 		GAME_HEIGHT = GameBoard.tileMap.getHeight() * TileMap.getTileSize();
 		eventObserver = new EventObserver();
-//		this.sound.play();
+		//		this.sound.play();
 
 		// Spawn Werewolf
 		Werewolf _w = new Werewolf(32.0, 32.0, "Werewolf");
 		int[] pos = GameBoard.tileMap.getRandomGroundPosition();
 		_w.setX(pos[0]);
 		_w.setY(pos[1]);
-		_w.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
-		this.players.add(_w);
+		//		this.players.add(_w);
 
 		// Spawn Sheep
-		for (int i = 0; i < 4; i++) {
-			Sheep _s = new Sheep(32.0, 32.0, "Sheep " + (i + 1));
-			pos = GameBoard.tileMap.getRandomGroundPosition();
-			_s.setX(pos[0]);
-			_s.setY(pos[1]);
-			_s.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
-			this.players.add(_s);
-		}
+		//		for (int i = 0; i < 4; i++) {
+		//			Sheep _s = new Sheep(32.0, 32.0, "Sheep " + (i + 1));
+		//			pos = GameBoard.tileMap.getRandomGroundPosition();
+		//			_s.setX(pos[0]);
+		//			_s.setY(pos[1]);
+		//			this.players.add(_s);
+		//		}
 
 		// Spawn Item
 		Item _wi = new Item();
@@ -115,77 +114,78 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void run() {
 		while (this.getGameState() == GameState.RUNNING) {
 			try {
-				Player p = this.players.get(this.selectedPlayer);
-				Vector2D v = p.getVector();
-				double dx = 0, dy = 0;
-				if (this.pressed.contains(65)) {
-					if (p.getStatus().equals("Speed Boost")) {
-						dx -= 7.5;
-					} else {
-						dx -= 5;
-					}
-				}
-				if (this.pressed.contains(68)) {
-					if (p.getStatus().equals("Speed Boost")) {
-						dx += 7.5;
-					} else {
-						dx += 5;
-					}
-				}
-				if (this.pressed.contains(87)) {
-					if (p.getStatus().equals("Speed Boost")) {
-						dy -= 7.5;
-					} else {
-						dy -= 5;
-					}
-				}
-				if (this.pressed.contains(83)) {
-					if (p.getStatus().equals("Speed Boost")) {
-						dy += 7.5;
-					} else {
-						dy += 5;
-					}
-				}
-
-				if (p.getStatus().equals("Transform") && p.getSpriteSheet().getMaxStep() != 19) {
-					p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
-				}
-
-				if (!p.getStatus().equals("None")) {
-					if (p.getBuffDuration() - 1 == 0) {
-						p.setStatus("None");
-						if (p instanceof Werewolf) {
-							p.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+				Player p = this.getPlayer();
+				if (p != null && p instanceof Player) {
+					Vector2D v = p.getVector();
+					double dx = 0, dy = 0;
+					if (this.pressed.contains(65)) {
+						if (p.getStatus().equals("Speed Boost")) {
+							dx -= 7.5;
+						} else {
+							dx -= 5;
 						}
-						p.setBuffDuration(400);
-						System.out.println("Effect worn out");
-					} else
-						p.setBuffDuration(p.getBuffDuration() - 1);
+					}
+					if (this.pressed.contains(68)) {
+						if (p.getStatus().equals("Speed Boost")) {
+							dx += 7.5;
+						} else {
+							dx += 5;
+						}
+					}
+					if (this.pressed.contains(87)) {
+						if (p.getStatus().equals("Speed Boost")) {
+							dy -= 7.5;
+						} else {
+							dy -= 5;
+						}
+					}
+					if (this.pressed.contains(83)) {
+						if (p.getStatus().equals("Speed Boost")) {
+							dy += 7.5;
+						} else {
+							dy += 5;
+						}
+					}
+
+					if (p.getStatus().equals("Transform") && p.getSpriteSheet().getMaxStep() != 19) {
+						p.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+					}
+
+					if (!p.getStatus().equals("None")) {
+						if (p.getBuffDuration() - 1 == 0) {
+							p.setStatus("None");
+							if (p instanceof Werewolf) {
+								p.setSpriteSheet(new SpriteSheet("image/wolf1_walk.png", 17));
+							}
+							p.setBuffDuration(400);
+							System.out.println("Effect worn out");
+						} else
+							p.setBuffDuration(p.getBuffDuration() - 1);
+					}
+
+					if (timeTick % (Game.TICK * 40 * 15) == 0) {
+						this.item.clear();
+						Item _wi = new Item();
+						_wi.setName(_wi.randomItem("Werewolf"));
+						String path = "image/item_" + _wi.getName() + ".png";
+						int[] pos = GameBoard.tileMap.getRandomGroundPosition();
+						_wi.setX(pos[0]);
+						_wi.setY(pos[1]);
+						_wi.setSpriteSheet(new SpriteSheet(path, 1));
+						this.item.add(_wi);
+						Item _si = new Item();
+						_si.setName(_si.randomItem("Sheep"));
+						pos = GameBoard.tileMap.getRandomGroundPosition();
+						_si.setX(pos[0]);
+						_si.setY(pos[1]);
+						_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
+						this.item.add(_si);
+					}
+
+					v.setX(dx);
+					v.setY(dy);
+					p.move();
 				}
-
-				if (timeTick % (Game.TICK * 40 * 15) == 0) {
-					this.item.clear();
-					Item _wi = new Item();
-					_wi.setName(_wi.randomItem("Werewolf"));
-					String path = "image/item_" + _wi.getName() + ".png";
-					int[] pos = GameBoard.tileMap.getRandomGroundPosition();
-					_wi.setX(pos[0]);
-					_wi.setY(pos[1]);
-					_wi.setSpriteSheet(new SpriteSheet(path, 1));
-					this.item.add(_wi);
-					Item _si = new Item();
-					_si.setName(_si.randomItem("Sheep"));
-					pos = GameBoard.tileMap.getRandomGroundPosition();
-					_si.setX(pos[0]);
-					_si.setY(pos[1]);
-					_si.setSpriteSheet(new SpriteSheet("image/item_s1.png", 1));
-					this.item.add(_si);
-				}
-
-				v.setX(dx);
-				v.setY(dy);
-				p.move();
-
 				// Update Entity position
 				for (Iterator<Projectile> iterProj = this.projectiles.iterator(); iterProj.hasNext();) {
 					Projectile proj = iterProj.next();
@@ -195,8 +195,9 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 							iterProj.remove();
 							continue;
 						}
-						for (Iterator<Player> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
-							Player player = iterPlayer.next();
+						for (Iterator<PlayerMP> iterPlayer = this.players.iterator(); iterPlayer.hasNext();) {
+							PlayerMP playerMP = iterPlayer.next();
+							Player player = playerMP.getPlayer();
 							if (player instanceof Sheep) {
 								if (proj.checkCollision(player.getHitbox())) {
 									if (proj instanceof Ball) {
@@ -217,7 +218,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 				for (Iterator<Item> iterItem = this.item.iterator(); iterItem.hasNext();) {
 					Item item = iterItem.next();
-					for (Player player : this.players) {
+					for (PlayerMP playerMP : this.players) {
+						Player player = playerMP.getPlayer();
 						if (item.checkCollision(player.getHitbox())) {
 							if ((player instanceof Werewolf && !item.getName().equals("s1"))
 									|| (player instanceof Sheep && item.getName().equals("s1"))) {
@@ -239,12 +241,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 						this.players.remove(0);
 						winTeam = "Sheep";
 					} else {
-						Player _w = this.players.get(0); // is it werewolf?
-						if (_w instanceof Werewolf) {
-							this.players.clear();
-							this.players.add(_w);
+						Player player = this.getPlayer(0); // is it werewolf?
+						if (player instanceof Werewolf) {
+							winTeam = "Werewolf";	
+						} else {
+							winTeam = "Sheep";
 						}
-						winTeam = "Werewolf";
 					}
 					eventObserver.onGameEnd(new GameEndEvent(this, winTeam, this.players));
 				} else {
@@ -268,8 +270,8 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 		if (this.getGameState() == GameState.RUNNING) {
 
 			// Translate screen to player
-			g2d.translate(-this.players.get(this.selectedPlayer).getX() + Game.WINDOW_WIDTH / 2,
-					-this.players.get(this.selectedPlayer).getY() + Game.WINDOW_HEIGHT / 2);
+			g2d.translate(-this.getPlayer().getX() + Game.WINDOW_WIDTH / 2,
+					-this.getPlayer().getY() + Game.WINDOW_HEIGHT / 2);
 
 			// Clear screen
 			g.setColor(new Color(0, 0, 0)); // int r, int g, int b
@@ -287,12 +289,12 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				_item.paint(g2d);
 			}
 
-			for (Player _player : this.players) {
-				_player.paint(g2d);
+			for (PlayerMP _player : this.players) {
+				_player.getPlayer().paint(g2d);
 			}
 
-			g2d.translate(this.players.get(this.selectedPlayer).getX() - Game.WINDOW_WIDTH / 2,
-					this.players.get(this.selectedPlayer).getY() - Game.WINDOW_HEIGHT / 2);
+			g2d.translate(this.getPlayer().getX() - Game.WINDOW_WIDTH / 2,
+					this.getPlayer().getY() - Game.WINDOW_HEIGHT / 2);
 
 			g2d.setColor(Color.WHITE);
 			g2d.setFont(new Font("Kanit", Font.BOLD, 42));
@@ -308,6 +310,18 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 
 	public void setGameState(GameState state) {
 		this.state = state;
+	}
+
+	public List<PlayerMP> getPlayers() {
+		return this.players;
+	}
+
+	public Player getPlayer() {
+		return this.getPlayer(this.selectedPlayer);
+	}
+
+	public Player getPlayer(int id) {
+		return this.players.get(id).getPlayer();
 	}
 
 	// Keyboard listener
@@ -339,7 +353,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 	public void mousePressed(MouseEvent e) {
 		// is left click ?
 		// MouseEvent.BUTTON1 = left click
-		Player player = this.players.get(this.selectedPlayer);
+		Player player = this.getPlayer();
 		if (player instanceof Werewolf) {
 			if (e.getButton() == MouseEvent.BUTTON1 && (timeTick - ballDelay >= 2000 || ballDelay == 0.0
 					|| (timeTick - ballDelay >= 1000 && player.getStatus().equals("Fast Reload")))) {
@@ -428,7 +442,7 @@ public class GameBoard extends JPanel implements KeyListener, MouseListener, Win
 				} else {
 					endingScene = ImageIO.read(getClass().getResource("image/Sheep-win.png"));
 				}
-				new WinnerScene(Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
+				new WinnerScene(_Client.client.getJFrame(), event.getWinnerTeam(), endingScene);
 				this.sound.stop();
 			}
 		} catch (IOException e) {

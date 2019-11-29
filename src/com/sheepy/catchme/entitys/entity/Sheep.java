@@ -4,34 +4,46 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import com.sheepy.catchme.GameBoard;
+import com.sheepy.catchme.SpriteSheet;
 import com.sheepy.catchme.events.PickupItemListener;
 import com.sheepy.catchme.events.PlayerMoveListener;
 
 public class Sheep extends Player implements PickupItemListener, PlayerMoveListener {
 	
 	public Sheep() {
-		super();
+		this(0, 0);
 	}
-	
+
 	public Sheep(int x, int y) {
-		super(x, y);
+		this(x, y, 25.0, 25.0, "Sheep");
 	}
-	
+
 	public Sheep(String name) {
-		super(name);
+		this(25.0, 25.0, name);
 	}
 
 	public Sheep(double width, double height) {
-		super(width, height);
+		this(width, height, "Sheep");
 	}
-	
+
 	public Sheep(double width, double height, String name) {
-		super(width, height, name);
+		this(0, 0, width, height, name);
+	}
+
+	public Sheep(int x, int y, double width, double height, String name) {
+		super(x, y, width, height, name, null, 5555);
 	}
 	
-	public Sheep(int x, int y, double width, double height, String name) {
-		super(x, y, width, height, name);
+	public Sheep(int x, int y, double width, double height, String name, String ipAddr, int port) {
+		super(x, y, width, height, name, ipAddr, port);
+		try {
+			this.setSpriteSheet(new SpriteSheet("image/sheepy1_walk.png", 19));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

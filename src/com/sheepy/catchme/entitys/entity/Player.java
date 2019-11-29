@@ -3,6 +3,8 @@ package com.sheepy.catchme.entitys.entity;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.sheepy.catchme.GameBoard;
 import com.sheepy.catchme.SpriteSheet;
@@ -15,7 +17,10 @@ import com.sheepy.catchme.events.PlayerStandingEvent;
 import com.sheepy.catchme.util.Vector2D;
 
 public abstract class Player extends Entitys implements PickupItemListener, PlayerMoveListener {
-
+	
+	private InetAddress ipAddress;
+	private int port;
+	
 	private String name;
 	protected SpriteSheet sheet;
 	private String status = "None";
@@ -36,14 +41,25 @@ public abstract class Player extends Entitys implements PickupItemListener, Play
 	public Player(double width, double height) {
 		this(0, 0, width, height, "tester");
 	}
-
+	
 	public Player(double width, double height, String name) {
 		this(0, 0, width, height, name);
 	}
 
 	public Player(int x, int y, double width, double height, String name) {
+		this(x, y, width, height, name, "localhost", 0);
+	}
+	
+
+	public Player(int x, int y, double width, double height, String name, String ipAddr, int port) {
 		super(x, y, width, height, new Vector2D(0, 0));
 		this.name = name;
+		try {
+			this.ipAddress = InetAddress.getByName(ipAddr);
+			this.port = port;
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		GameBoard.eventObserver.addPickupListener(this);
 		GameBoard.eventObserver.addPlayerMoveListener(this);
 	}
@@ -81,6 +97,22 @@ public abstract class Player extends Entitys implements PickupItemListener, Play
 
 	public void setBuffDuration(int buffDuration) {
 		this.buffDuration = buffDuration;
+	}
+	
+	public InetAddress getIpAddress() {
+		return this.ipAddress;
+	}
+	
+	public void setIpAddress(InetAddress addr) {
+		this.ipAddress = addr;
+	}
+	
+	public int getPort() {
+		return this.port;
+	}
+	
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 	@Override

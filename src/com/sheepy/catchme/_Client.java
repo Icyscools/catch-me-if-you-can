@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 import org.bson.Document;
 
-public class Client implements ActionListener, Serializable {
+public class _Client implements ActionListener, Serializable {
 	private JFrame frame;
 	private JPanel p0, p1, p2, p3, p4;
 	private JLabel instructionLb, ipLb, titleLb, userLb, passLb, status;
@@ -18,11 +18,11 @@ public class Client implements ActionListener, Serializable {
 	private transient ObjectOutputStream toServer;	// Request to server
 	private transient ObjectInputStream fromServer;	// Response from server
 	private Account account;
-	public static Client client;
+	public static _Client client;
 	public static String serverIp;
 	public static int serverPort = 5555;
 
-	public Client() {
+	public _Client() {
 		this.frame = new JFrame(Game.TITLE + " - Client");
 		p0 = new JPanel();	// Title Label
 		p1 = new JPanel();	// Username / Instruction
@@ -273,7 +273,7 @@ public class Client implements ActionListener, Serializable {
 	}
 
 	public static void main(String[] args) {
-		new Client();
+		new _Client();
 	}
 
 }

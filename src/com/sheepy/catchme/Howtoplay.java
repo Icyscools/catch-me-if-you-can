@@ -22,7 +22,7 @@ public class Howtoplay extends JPanel implements ActionListener {
     private JPanel p0, p1, p2, p3, p4;
 
     public Howtoplay() {
-        this(Client.client.getJFrame());
+        this(_Client.client.getJFrame());
     }
 
     public Howtoplay(JFrame frame) {
